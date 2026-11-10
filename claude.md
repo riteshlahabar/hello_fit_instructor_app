@@ -1,9 +1,9 @@
 # HelloFit instructor app (Flutter) — see `../claude.md`
 
-**Project instructions live in `../claude.md` (a short index) and `../docs/`. Read those.**
+**Project instructions live in `../claude.md` (a short index) and `../state/`. Read those.**
 
-Most relevant here: `../docs/frontend-state.md`, `../docs/frontend-conventions.md`
-(conventions + design tokens), `../docs/working-order.md`, `../docs/commands.md`.
+Most relevant here: `../state/frontend-state.md`, `../state/frontend-conventions.md`
+(conventions + design tokens), `../state/working-order.md`, `../state/commands.md`.
 
 This file deliberately holds no instructions of its own — it used to be a full copy of the
 root file and silently went stale. Claude Code loads the *nearest* `claude.md`, so a
@@ -22,4 +22,4 @@ Nothing here is real yet. When it is picked up, port `core/` (network, token sto
 auth) from `../customer_app/` rather than rewriting it. The customer app is
 `../customer_app/`.
 
-Day-to-day history is in `../worklog/`. Read the latest entry before trusting `../docs/`.
+Day-to-day history is in `../worklog/`. Read the latest entry before trusting `../state/`.
