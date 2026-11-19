@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The app talks to the HelloFit API. Release builds get no permission
+         from the debug manifest, so it is declared here. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="instructor_app"
+        android:label="HelloFit Trainer"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

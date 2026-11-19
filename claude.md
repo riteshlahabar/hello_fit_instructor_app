@@ -1,9 +1,10 @@
-# HelloFit instructor app (Flutter) — see `../claude.md`
+# HelloFit trainer app (Flutter) — see `../claude.md`
 
 **Project instructions live in `../claude.md` (a short index) and `../state/`. Read those.**
 
-Most relevant here: `../state/frontend-state.md`, `../state/frontend-conventions.md`
-(conventions + design tokens), `../state/working-order.md`, `../state/commands.md`.
+Most relevant here: `../state/frontend/trainer-app.md` (what is built, and the two open
+client questions), `../state/frontend-conventions.md` (structure + shared tokens),
+`../state/working-order.md`, `../state/commands.md`.
 
 This file deliberately holds no instructions of its own — it used to be a full copy of the
 root file and silently went stale. Claude Code loads the *nearest* `claude.md`, so a
@@ -11,15 +12,12 @@ session working in this directory was getting that stale text. Keep this file a 
 
 The one rule that matters most here, repeated because this is the directory it governs:
 
-> **Do not build or design UI yet.** Don't invent screens, layouts, component libraries or
-> visual styling, and don't touch this directory beyond what the backend needs. The client
-> is supplying the designs. When they land, build against the API that already exists —
-> not the reverse.
+> **Convert, never design.** The client supplied 74 HTML pages in `../Trainer app screen/`.
+> Every screen in this app is a 1:1 transcription of one of them — the CSS numbers are the
+> spec. Do not invent a screen, a layout, a component or a colour that is not in that pack,
+> and do not convert a page that is outside the PDF's §4.1–4.10 without asking.
 
-**This folder is a bare `flutter create` scaffold** created 7 Nov 2026 — `lib/main.dart` is
-still the default counter demo and there are no dependencies beyond `cupertino_icons`.
-Nothing here is real yet. When it is picked up, port `core/` (network, token store, theme,
-auth) from `../customer_app/` rather than rewriting it. The customer app is
-`../customer_app/`.
+Was `instructor_app/` until 19 Nov 2026. `android/`, `ios/` and `instructor_app.iml` still
+carry the old id.
 
 Day-to-day history is in `../worklog/`. Read the latest entry before trusting `../state/`.
