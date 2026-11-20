@@ -47,10 +47,7 @@ class RequestsBanner extends ConsumerWidget {
                     const SizedBox(height: 2),
                     const Text(
                       'Respond promptly to secure the booking.',
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: HFColors.statusBody,
-                      ),
+                      style: TextStyle(fontSize: 9, color: HFColors.statusBody),
                     ),
                   ],
                 ),

@@ -66,7 +66,8 @@ class _OtpBoxesState extends State<OtpBoxes> {
 
   void _onKey(int index, KeyEvent event) {
     final isBackspace =
-        event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.backspace;
+        event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.backspace;
     if (isBackspace && _controllers[index].text.isEmpty && index > 0) {
       _controllers[index - 1].clear();
       _nodes[index - 1].requestFocus();

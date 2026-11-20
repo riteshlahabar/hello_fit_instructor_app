@@ -99,4 +99,3 @@ class HFAvatar extends StatelessWidget {
     );
   }
 }
-

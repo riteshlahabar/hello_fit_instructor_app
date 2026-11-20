@@ -37,6 +37,7 @@ class VerificationStatusScreen extends ConsumerWidget {
           : 'Our team is reviewing your profile. You will be notified as soon '
                 'as the review is done.',
       onBack: context.canPop() ? context.pop : null,
+      onRefresh: () => ref.read(profileControllerProvider.notifier).refresh(),
       children: [
         const WizardSectionLabel('PROGRESS'),
         for (var i = 0; i < _stages.length; i++)

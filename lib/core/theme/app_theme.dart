@@ -7,10 +7,9 @@ import 'tokens.dart';
 abstract final class AppTheme {
   static ThemeData light() {
     final base = ThemeData.light(useMaterial3: true);
-    final text = GoogleFonts.poppinsTextTheme(base.textTheme).apply(
-      bodyColor: HFColors.ink,
-      displayColor: HFColors.ink,
-    );
+    final text = GoogleFonts.poppinsTextTheme(
+      base.textTheme,
+    ).apply(bodyColor: HFColors.ink, displayColor: HFColors.ink);
 
     return base.copyWith(
       scaffoldBackgroundColor: HFColors.ivory,

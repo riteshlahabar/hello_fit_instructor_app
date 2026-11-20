@@ -76,10 +76,7 @@ void main() {
   });
 
   testWidgets('a keystore failure still leaves the splash', (tester) async {
-    await _pump(
-      tester,
-      _FakeAuthRepository(stored: false, throwOnRead: true),
-    );
+    await _pump(tester, _FakeAuthRepository(stored: false, throwOnRead: true));
 
     expect(find.text('Skip'), findsOneWidget);
   });

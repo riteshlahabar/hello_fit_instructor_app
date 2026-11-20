@@ -35,7 +35,11 @@ class SessionSlot {
 /// session starts: a short name and initials, never a phone number.
 @immutable
 class ClientRef {
-  const ClientRef({required this.id, required this.name, required this.initials});
+  const ClientRef({
+    required this.id,
+    required this.name,
+    required this.initials,
+  });
 
   factory ClientRef.fromJson(Map<String, dynamic> json) => ClientRef(
     id: json['id'] as String? ?? '',
@@ -88,7 +92,9 @@ class BookingRow {
       (json['client'] as Map<String, dynamic>?) ?? const {},
     ),
     service: json['service'] as String? ?? '',
-    slot: SessionSlot.fromJson((json['slot'] as Map<String, dynamic>?) ?? const {}),
+    slot: SessionSlot.fromJson(
+      (json['slot'] as Map<String, dynamic>?) ?? const {},
+    ),
     persons: (json['persons'] as num?)?.toInt() ?? 1,
     amount: (json['amount'] as num?)?.toDouble() ?? 0,
     area: json['area'] as String? ?? '',

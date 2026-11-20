@@ -126,8 +126,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile/bank',
         name: 'profile-bank',
-        builder: (context, state) =>
-            const BankAccountScreen(inWizard: false),
+        builder: (context, state) => const BankAccountScreen(inWizard: false),
       ),
       GoRoute(
         path: '/profile/documents',

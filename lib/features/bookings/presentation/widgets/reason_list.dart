@@ -63,9 +63,7 @@ class _Row extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
         decoration: BoxDecoration(
           color: chosen ? HFColors.statusBg : HFColors.white,
-          border: Border.all(
-            color: chosen ? HFColors.primary : HFColors.line,
-          ),
+          border: Border.all(color: chosen ? HFColors.primary : HFColors.line),
           borderRadius: BorderRadius.circular(11),
         ),
         child: Row(

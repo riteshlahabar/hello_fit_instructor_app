@@ -90,10 +90,7 @@ class _MetricTile extends StatelessWidget {
           const SizedBox(height: 3),
           Text(
             metric.caption,
-            style: const TextStyle(
-              fontSize: 10,
-              color: HFColors.metricCaption,
-            ),
+            style: const TextStyle(fontSize: 10, color: HFColors.metricCaption),
           ),
         ],
       ),

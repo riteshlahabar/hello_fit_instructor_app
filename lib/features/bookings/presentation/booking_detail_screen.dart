@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/tokens.dart';
+import '../../../core/widgets/hf_refresh.dart';
 import '../../../core/widgets/hf_action_pair.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_field_grid.dart';
@@ -27,24 +28,18 @@ class BookingDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(bookingDetailProvider(sessionId));
+    Future<void> refresh() =>
+        ref.refresh(bookingDetailProvider(sessionId).future);
 
     return switch (detail) {
-      AsyncValue(:final value?) => _Body(detail: value),
+      AsyncValue(:final value?) => _Body(detail: value, onRefresh: refresh),
       AsyncError(:final error) => _Frame(
+        onRefresh: refresh,
         children: [
           HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
         ],
       ),
-      _ => const _Frame(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Center(
-              child: CircularProgressIndicator(color: HFColors.primary),
-            ),
-          ),
-        ],
-      ),
+      _ => _Frame(onRefresh: refresh, children: const [HFLoadingRow()]),
     };
   }
 }
@@ -52,10 +47,11 @@ class BookingDetailScreen extends ConsumerWidget {
 /// The page's chrome, shared by its loading, error and loaded states so the
 /// heading does not appear only once the request has answered.
 class _Frame extends StatelessWidget {
-  const _Frame({required this.children, this.footer});
+  const _Frame({required this.children, this.footer, this.onRefresh});
 
   final List<Widget> children;
   final Widget? footer;
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -65,21 +61,24 @@ class _Frame extends StatelessWidget {
       title: 'BOOKING\nDETAILS.',
       sub: "Check the client's requirements and preferred session schedule.",
       footer: footer,
+      onRefresh: onRefresh,
       children: children,
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.detail});
+  const _Body({required this.detail, required this.onRefresh});
 
   final BookingDetail detail;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final row = detail.row;
 
     return _Frame(
+      onRefresh: onRefresh,
       footer: detail.awaitsAnswer && detail.requestId != null
           ? HFActionPair(
               secondaryLabel: 'Decline',
@@ -142,10 +141,7 @@ class _Body extends StatelessWidget {
               detail.sessionCount > 1 ? '${detail.sessionCount}' : '1',
             ),
             ('Participants', '${row.persons}'),
-            (
-              'Client location',
-              row.area.isEmpty ? 'Client address' : row.area,
-            ),
+            ('Client location', row.area.isEmpty ? 'Client address' : row.area),
             ('Session amount', rupees(row.amount)),
           ],
         ),

@@ -84,9 +84,7 @@ class _Option extends StatelessWidget {
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
                   size: 16,
-                  color: selected
-                      ? HFColors.primary
-                      : const Color(0xFF9A9087),
+                  color: selected ? HFColors.primary : const Color(0xFF9A9087),
                 ),
                 const SizedBox(width: 7),
                 Expanded(

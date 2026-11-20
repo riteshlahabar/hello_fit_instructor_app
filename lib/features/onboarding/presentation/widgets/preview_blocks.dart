@@ -84,10 +84,7 @@ class PreviewFacts extends StatelessWidget {
     return HFCard(
       child: Column(
         children: [
-          _Row(
-            label: 'Experience',
-            value: '${profile.experienceYears}+ years',
-          ),
+          _Row(label: 'Experience', value: '${profile.experienceYears}+ years'),
           if (profile.travelRadiusKm != null)
             _Row(label: 'Travels up to', value: '${profile.travelRadiusKm} km'),
           if ((profile.bio ?? '').isNotEmpty)

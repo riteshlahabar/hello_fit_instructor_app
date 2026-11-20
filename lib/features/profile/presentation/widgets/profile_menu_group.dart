@@ -20,11 +20,7 @@ class ProfileMenuRow {
 /// `.group` — a card holding the rows, hairline between them, none after the
 /// last. The section label above it is `.sectionlabel`.
 class ProfileMenuGroup extends StatelessWidget {
-  const ProfileMenuGroup({
-    super.key,
-    required this.label,
-    required this.rows,
-  });
+  const ProfileMenuGroup({super.key, required this.label, required this.rows});
 
   final String label;
   final List<ProfileMenuRow> rows;
@@ -108,19 +104,12 @@ class _Row extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     row.sub,
-                    style: const TextStyle(
-                      fontSize: 9,
-                      color: HFColors.muted,
-                    ),
+                    style: const TextStyle(fontSize: 9, color: HFColors.muted),
                   ),
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right,
-              size: 20,
-              color: Color(0xFFA89A8D),
-            ),
+            const Icon(Icons.chevron_right, size: 20, color: Color(0xFFA89A8D)),
           ],
         ),
       ),

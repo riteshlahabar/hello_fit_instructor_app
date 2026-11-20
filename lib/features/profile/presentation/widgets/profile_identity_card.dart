@@ -74,10 +74,7 @@ class ProfileIdentityCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   _role,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    color: Color(0xFFE8D9CD),
-                  ),
+                  style: const TextStyle(fontSize: 9, color: Color(0xFFE8D9CD)),
                 ),
                 const SizedBox(height: 7),
                 _StagePill(stage: stage),

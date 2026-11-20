@@ -10,20 +10,18 @@ import 'token_refresher.dart';
 /// token, one-shot refresh rotation on 401, and envelope-aware error mapping.
 class ApiClient {
   ApiClient(this._tokenStore, {String? baseUrl})
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl: baseUrl ?? defaultBaseUrl,
-            connectTimeout: const Duration(seconds: 15),
-            receiveTimeout: const Duration(seconds: 20),
-            contentType: Headers.jsonContentType,
-            // The backend signals failures through the envelope, so let every
-            // status through and map it here instead of throwing on 4xx.
-            validateStatus: (_) => true,
-          ),
-        ) {
-    _dio.interceptors.add(
-      InterceptorsWrapper(onRequest: _attachToken),
-    );
+    : _dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl ?? defaultBaseUrl,
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 20),
+          contentType: Headers.jsonContentType,
+          // The backend signals failures through the envelope, so let every
+          // status through and map it here instead of throwing on 4xx.
+          validateStatus: (_) => true,
+        ),
+      ) {
+    _dio.interceptors.add(InterceptorsWrapper(onRequest: _attachToken));
   }
 
   /// The deployed API. Both web hosts proxy `/api/` to the same NestJS
@@ -65,50 +63,45 @@ class ApiClient {
     Map<String, dynamic>? query,
     T Function(dynamic data)? parse,
     bool skipAuth = false,
-  }) =>
-      _send(
-        () => _dio.get(
-          path,
-          queryParameters: query,
-          options: Options(extra: {'skipAuth': skipAuth}),
-        ),
-        parse,
-      );
+  }) => _send(
+    () => _dio.get(
+      path,
+      queryParameters: query,
+      options: Options(extra: {'skipAuth': skipAuth}),
+    ),
+    parse,
+  );
 
   Future<ApiResult<T>> post<T>(
     String path, {
     Object? body,
     T Function(dynamic data)? parse,
     bool skipAuth = false,
-  }) =>
-      _send(
-        () => _dio.post(
-          path,
-          data: body,
-          options: Options(extra: {'skipAuth': skipAuth}),
-        ),
-        parse,
-      );
+  }) => _send(
+    () => _dio.post(
+      path,
+      data: body,
+      options: Options(extra: {'skipAuth': skipAuth}),
+    ),
+    parse,
+  );
 
   Future<ApiResult<T>> patch<T>(
     String path, {
     Object? body,
     T Function(dynamic data)? parse,
-  }) =>
-      _send(() => _dio.patch(path, data: body), parse);
+  }) => _send(() => _dio.patch(path, data: body), parse);
 
   Future<ApiResult<T>> put<T>(
     String path, {
     Object? body,
     T Function(dynamic data)? parse,
-  }) =>
-      _send(() => _dio.put(path, data: body), parse);
+  }) => _send(() => _dio.put(path, data: body), parse);
 
   Future<ApiResult<T>> delete<T>(
     String path, {
     T Function(dynamic data)? parse,
-  }) =>
-      _send(() => _dio.delete(path), parse);
+  }) => _send(() => _dio.delete(path), parse);
 
   /// Multipart POST — the file rides as `file`, the rest as form fields.
   /// `POST /app/instructor/documents` is the only caller so far.

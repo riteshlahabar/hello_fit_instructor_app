@@ -26,10 +26,12 @@ final bookingQueryProvider = NotifierProvider<UiState<String>, String>(
 /// Page 30's list. Re-reads itself when the chip or the query changes, so the
 /// filtering happens on the server where the `where` clause is.
 final bookingPageProvider = FutureProvider<BookingPage>((ref) async {
-  final result = await ref.watch(bookingsRepositoryProvider).list(
-    filter: ref.watch(bookingFilterProvider),
-    query: ref.watch(bookingQueryProvider),
-  );
+  final result = await ref
+      .watch(bookingsRepositoryProvider)
+      .list(
+        filter: ref.watch(bookingFilterProvider),
+        query: ref.watch(bookingQueryProvider),
+      );
 
   return switch (result) {
     ApiSuccess(:final data) => data,
@@ -79,7 +81,8 @@ class RequestController extends Notifier<void> {
     String requestId, {
     required String reason,
     String? message,
-  }) => _answer(() => _repo.reject(requestId, reason: reason, message: message));
+  }) =>
+      _answer(() => _repo.reject(requestId, reason: reason, message: message));
 
   BookingsRepository get _repo => ref.read(bookingsRepositoryProvider);
 

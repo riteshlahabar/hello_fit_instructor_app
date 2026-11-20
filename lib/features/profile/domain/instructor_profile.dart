@@ -130,6 +130,7 @@ class InstructorProfile {
 
   /// The address and professional-background columns (19 Nov 2026).
   final ProfileContact contact;
+
   /// A User column, flattened onto the own-profile response so page 66's box
   /// can show the address already on file (client, 20-11-2026).
   final String? email;

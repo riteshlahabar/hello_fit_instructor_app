@@ -32,13 +32,17 @@ void main() {
     });
 
     test('a missing document still blocks the button', () {
-      expect(status(coc: false, docs: ['PAN']).readyApartFromCodeOfConduct,
-          isFalse);
+      expect(
+        status(coc: false, docs: ['PAN']).readyApartFromCodeOfConduct,
+        isFalse,
+      );
     });
 
     test('a missing profile field still blocks the button', () {
-      expect(status(coc: false, fields: ['bio']).readyApartFromCodeOfConduct,
-          isFalse);
+      expect(
+        status(coc: false, fields: ['bio']).readyApartFromCodeOfConduct,
+        isFalse,
+      );
     });
 
     test('the code-of-conduct reason is hidden, the real ones are not', () {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/tokens.dart';
 
-
 /// `.actions` — the two-button row pages 32, 33 and 34 end on. The left
 /// button is the way out, the right one is the commitment.
 class HFActionPair extends StatelessWidget {

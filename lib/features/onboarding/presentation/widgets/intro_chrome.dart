@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/tokens.dart';
 
-
 /// `.topline` — logo with its caption, and Skip.
 class IntroTopLine extends StatelessWidget {
   const IntroTopLine({super.key, required this.onSkip});

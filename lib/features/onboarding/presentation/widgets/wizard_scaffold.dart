@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/tokens.dart';
+import '../../../../core/widgets/hf_refresh.dart';
 
 /// The frame pages 12–21 share: back button, "STEP n OF 6", a single progress
 /// bar, Anton heading and sub copy.
@@ -19,6 +20,7 @@ class WizardScaffold extends StatelessWidget {
     required this.children,
     this.onBack,
     this.trailing,
+    this.onRefresh,
   });
 
   /// e.g. `STEP 1 OF 6`, or `PROFILE SETUP` on the pages outside the count.
@@ -35,84 +37,93 @@ class WizardScaffold extends StatelessWidget {
   /// Optional control at the right of the header row.
   final Widget? trailing;
 
+  /// Pull-to-refresh, for the steps that *read back* what the API holds — the
+  /// document rows, the submit blockers, the verification stage. The
+  /// text-entry steps leave it null: their fields are a local draft, so a
+  /// re-fetch would either show nothing new or throw away typing.
+  final Future<void> Function()? onRefresh;
+
   @override
   Widget build(BuildContext context) {
+    final body = SingleChildScrollView(
+      physics: HFRefresh.physics,
+      padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 42,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (onBack != null)
+                  InkWell(
+                    onTap: onBack,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: HFColors.white,
+                        border: Border.all(color: const Color(0xFFE8DCCF)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.chevron_left, size: 22),
+                    ),
+                  )
+                else
+                  const SizedBox(width: 36),
+                Text(
+                  stepLabel,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: .7,
+                    color: Color(0xFF75695E),
+                  ),
+                ),
+                ?trailing,
+              ],
+            ),
+          ),
+          if (progress != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 17, 0, 19),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(9),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 5,
+                  backgroundColor: const Color(0xFFEADFD4),
+                  valueColor: const AlwaysStoppedAnimation(HFColors.primary),
+                ),
+              ),
+            )
+          else
+            const SizedBox(height: 17),
+          Text(title, style: AppTheme.display(34)),
+          const SizedBox(height: 9),
+          Text(
+            sub,
+            style: const TextStyle(
+              fontSize: 12,
+              height: 1.7,
+              color: Color(0xFF75695E),
+            ),
+          ),
+          const SizedBox(height: 22),
+          ...children,
+        ],
+      ),
+    );
+
     return Scaffold(
       backgroundColor: HFColors.ivory,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 42,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (onBack != null)
-                      InkWell(
-                        onTap: onBack,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          width: 36,
-                          height: 36,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: HFColors.white,
-                            border: Border.all(color: const Color(0xFFE8DCCF)),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.chevron_left, size: 22),
-                        ),
-                      )
-                    else
-                      const SizedBox(width: 36),
-                    Text(
-                      stepLabel,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: .7,
-                        color: Color(0xFF75695E),
-                      ),
-                    ),
-                    ?trailing,
-                  ],
-                ),
-              ),
-              if (progress != null)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 17, 0, 19),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(9),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 5,
-                      backgroundColor: const Color(0xFFEADFD4),
-                      valueColor: const AlwaysStoppedAnimation(
-                        HFColors.primary,
-                      ),
-                    ),
-                  ),
-                )
-              else
-                const SizedBox(height: 17),
-              Text(title, style: AppTheme.display(34)),
-              const SizedBox(height: 9),
-              Text(
-                sub,
-                style: const TextStyle(
-                  fontSize: 12,
-                  height: 1.7,
-                  color: Color(0xFF75695E),
-                ),
-              ),
-              const SizedBox(height: 22),
-              ...children,
-            ],
-          ),
-        ),
+        child: onRefresh == null
+            ? body
+            : HFRefresh(onRefresh: onRefresh!, child: body),
       ),
     );
   }

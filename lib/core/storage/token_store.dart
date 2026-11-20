@@ -5,15 +5,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 /// rooted-device dump in plain text.
 class TokenStore {
   TokenStore({FlutterSecureStorage? storage})
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              // v11 encrypts by default (AES-GCM with RSA-OAEP key wrapping),
-              // so the old encryptedSharedPreferences flag no longer exists.
-              aOptions: AndroidOptions(),
-              iOptions: IOSOptions(
-                accessibility: KeychainAccessibility.first_unlock,
-              ),
-            );
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(
+            // v11 encrypts by default (AES-GCM with RSA-OAEP key wrapping),
+            // so the old encryptedSharedPreferences flag no longer exists.
+            aOptions: AndroidOptions(),
+            iOptions: IOSOptions(
+              accessibility: KeychainAccessibility.first_unlock,
+            ),
+          );
 
   final FlutterSecureStorage _storage;
 

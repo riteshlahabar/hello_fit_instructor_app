@@ -114,15 +114,20 @@ class EarningsSummary {
         completedSessions: (json['completedSessions'] as num?)?.toInt() ?? 0,
         averagePerSession: (json['averagePerSession'] as num?)?.toDouble() ?? 0,
         chart: switch (json['chart']) {
-          final List<dynamic> list => list
-              .map((e) => EarningsBar.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          final List<dynamic> list =>
+            list
+                .map((e) => EarningsBar.fromJson(e as Map<String, dynamic>))
+                .toList(),
           _ => const [],
         },
         transactions: switch (json['transactions']) {
-          final List<dynamic> list => list
-              .map((e) => EarningsTransaction.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          final List<dynamic> list =>
+            list
+                .map(
+                  (e) =>
+                      EarningsTransaction.fromJson(e as Map<String, dynamic>),
+                )
+                .toList(),
           _ => const [],
         },
         nextPayout: switch (json['nextPayout']) {

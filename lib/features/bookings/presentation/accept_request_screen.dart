@@ -91,7 +91,8 @@ class _State extends ConsumerState<AcceptRequestScreen> {
       backLabel: 'Booking Requests',
       eyebrow: 'Booking request · Review',
       title: 'ACCEPT THIS\nBOOKING?',
-      sub: 'Review the session details before confirming. The client will be '
+      sub:
+          'Review the session details before confirming. The client will be '
           'notified once you accept.',
       footer: HFActionPair(
         secondaryLabel: 'Decline',
@@ -124,7 +125,8 @@ class _State extends ConsumerState<AcceptRequestScreen> {
         ),
         const SizedBox(height: 13),
         const HFFinePrint(
-          text: 'By confirming, this request moves to your confirmed bookings '
+          text:
+              'By confirming, this request moves to your confirmed bookings '
               'and the client is notified. Please make sure the date, time '
               'and location work for you.',
         ),

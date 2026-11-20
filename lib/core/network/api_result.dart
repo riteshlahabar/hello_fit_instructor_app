@@ -10,9 +10,9 @@ sealed class ApiResult<T> {
 
   /// Value on success, null on failure — for call sites that do not branch.
   T? get valueOrNull => switch (this) {
-        ApiSuccess<T>(:final data) => data,
-        ApiFailure<T>() => null,
-      };
+    ApiSuccess<T>(:final data) => data,
+    ApiFailure<T>() => null,
+  };
 }
 
 final class ApiSuccess<T> extends ApiResult<T> {
@@ -40,9 +40,9 @@ final class ApiFailure<T> extends ApiResult<T> {
 
   /// Field-level validation messages, when the failure was a 400.
   List<String> get validationMessages => switch (details) {
-        final List<dynamic> list => list.map((e) => e.toString()).toList(),
-        _ => const [],
-      };
+    final List<dynamic> list => list.map((e) => e.toString()).toList(),
+    _ => const [],
+  };
 }
 
 /// What a screen should actually show.

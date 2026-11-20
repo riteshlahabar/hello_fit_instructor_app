@@ -7,11 +7,7 @@ import '../theme/tokens.dart';
 /// but the asset is square, so 116 renders a 116px-tall header — the client
 /// asked for a small mark (19 Nov), so it is 44x44 here.
 class HFHeader extends StatelessWidget {
-  const HFHeader({
-    super.key,
-    this.hasUnread = true,
-    this.onNotifications,
-  });
+  const HFHeader({super.key, this.hasUnread = true, this.onNotifications});
 
   final bool hasUnread;
   final VoidCallback? onNotifications;

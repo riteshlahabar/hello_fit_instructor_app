@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/tokens.dart';
+import '../../../core/widgets/hf_refresh.dart';
 import '../data/profile_providers.dart';
 import '../domain/instructor_profile.dart';
 import 'widgets/profile_identity_card.dart';
@@ -16,6 +17,11 @@ import 'widgets/profile_menu_group.dart';
 /// design's other two groups and are deliberately absent: nothing in the API
 /// stores a notification preference and pages 68/72/73 are not built, so a row
 /// here would be a dead end. → `state/working-order.md`.
+///
+/// Pull down to re-read `GET /app/instructor/profile` — which is how an
+/// approval, or a document the admin has just verified, reaches the app. The
+/// failed and empty reads refresh too: a profile that will not load is the one
+/// a trainer most needs to retry.
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -23,17 +29,20 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileControllerProvider);
 
-    return switch (state) {
-      AsyncData(:final value) when value != null => _Body(profile: value),
-      AsyncError(:final error) => _Message(
-        text: '$error'.replaceFirst('Exception: ', ''),
-        onRetry: () => ref.invalidate(profileControllerProvider),
-      ),
-      AsyncData() => const _Message(
-        text: 'Your trainer profile has not been created yet.',
-      ),
-      _ => const Center(child: CircularProgressIndicator()),
-    };
+    return HFRefresh(
+      onRefresh: () => ref.refresh(profileControllerProvider.future),
+      child: switch (state) {
+        AsyncData(:final value?) => _Body(profile: value),
+        AsyncError(:final error) => _Message(
+          text: '$error'.replaceFirst('Exception: ', ''),
+          onRetry: () => ref.invalidate(profileControllerProvider),
+        ),
+        AsyncData() => const _Message(
+          text: 'Your trainer profile has not been created yet.',
+        ),
+        _ => const _Message(text: 'Loading your profile…'),
+      },
+    );
   }
 }
 
@@ -45,6 +54,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: HFRefresh.physics,
       padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,11 +71,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 10),
           const Text(
             'Manage your trainer profile and account details.',
-            style: TextStyle(
-              fontSize: 11,
-              height: 1.6,
-              color: HFColors.muted,
-            ),
+            style: TextStyle(fontSize: 11, height: 1.6, color: HFColors.muted),
           ),
           const SizedBox(height: 14),
           ProfileIdentityCard(profile: profile),
@@ -113,7 +119,8 @@ class _Body extends StatelessWidget {
 }
 
 /// An empty or failed profile read still has to offer the way out, or a
-/// trainer whose profile will not load cannot sign out of the app.
+/// trainer whose profile will not load cannot sign out of the app. Scrollable
+/// so the pull gesture reaches it — see [HFRefresh.physics].
 class _Message extends StatelessWidget {
   const _Message({required this.text, this.onRetry});
 
@@ -122,15 +129,21 @@ class _Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(22),
+    return SingleChildScrollView(
+      physics: HFRefresh.physics,
+      padding: const EdgeInsets.fromLTRB(22, 60, 22, 22),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             text,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 12, color: HFColors.muted),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Pull down to refresh.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 10, color: HFColors.muted),
           ),
           if (onRetry != null)
             TextButton(onPressed: onRetry, child: const Text('Try again')),

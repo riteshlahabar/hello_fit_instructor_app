@@ -68,10 +68,7 @@ class BookingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
-                  child: _Meta(
-                    label: row.slot.date,
-                    value: row.slot.time,
-                  ),
+                  child: _Meta(label: row.slot.date, value: row.slot.time),
                 ),
                 Expanded(
                   child: _Meta(
@@ -103,8 +100,9 @@ class _Meta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: alignEnd
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(

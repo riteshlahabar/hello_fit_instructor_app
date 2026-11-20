@@ -85,6 +85,7 @@ class _State extends ConsumerState<DocumentsScreen> {
           'Upload the documents we need to verify you before your profile '
           'goes live.',
       onBack: context.canPop() ? context.pop : null,
+      onRefresh: () => ref.refresh(profileControllerProvider.future),
       children: [
         const WizardSectionLabel('REQUIRED DOCUMENTS'),
         for (final docType in required)

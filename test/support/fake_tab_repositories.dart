@@ -40,9 +40,8 @@ class FakeBookingsRepository implements BookingsRepository {
   Future<ApiResult<BookingPage>> list({
     BookingFilter filter = BookingFilter.all,
     String? query,
-  }) async => const ApiSuccess(
-    BookingPage(rows: [], summary: BookingSummary.empty),
-  );
+  }) async =>
+      const ApiSuccess(BookingPage(rows: [], summary: BookingSummary.empty));
 
   @override
   Future<ApiResult<BookingDetail>> detail(String sessionId) async =>

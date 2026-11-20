@@ -15,5 +15,6 @@ class ShellController extends Notifier<TrainerTab> {
   void selectIndex(int index) => state = TrainerTab.values[index];
 }
 
-final shellControllerProvider =
-    NotifierProvider<ShellController, TrainerTab>(ShellController.new);
+final shellControllerProvider = NotifierProvider<ShellController, TrainerTab>(
+  ShellController.new,
+);

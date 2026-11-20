@@ -61,10 +61,7 @@ class _HFSearchFieldState extends State<HFSearchField> {
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 hintText: widget.hint,
-                hintStyle: const TextStyle(
-                  fontSize: 11,
-                  color: HFColors.muted,
-                ),
+                hintStyle: const TextStyle(fontSize: 11, color: HFColors.muted),
               ),
             ),
           ),

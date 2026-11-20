@@ -10,9 +10,10 @@ class ApiClientsRepository implements ClientsRepository {
   final ApiClient _api;
 
   static List<TrainerClient> _rows(dynamic data) => switch (data) {
-    final List<dynamic> list => list
-        .map((e) => TrainerClient.fromJson(e as Map<String, dynamic>))
-        .toList(),
+    final List<dynamic> list =>
+      list
+          .map((e) => TrainerClient.fromJson(e as Map<String, dynamic>))
+          .toList(),
     _ => const [],
   };
 
@@ -39,7 +40,12 @@ class ApiClientsRepository implements ClientsRepository {
           ),
         ),
       ),
-      ApiFailure(:final code, :final message, :final details, :final statusCode) =>
+      ApiFailure(
+        :final code,
+        :final message,
+        :final details,
+        :final statusCode,
+      ) =>
         ApiFailure<ClientPage>(
           code: code,
           message: message,

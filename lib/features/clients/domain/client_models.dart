@@ -132,9 +132,10 @@ class ClientProfile {
   factory ClientProfile.fromJson(Map<String, dynamic> json) => ClientProfile(
     client: TrainerClient.fromJson(json),
     recent: switch (json['recent']) {
-      final List<dynamic> list => list
-          .map((e) => ClientSession.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      final List<dynamic> list =>
+        list
+            .map((e) => ClientSession.fromJson(e as Map<String, dynamic>))
+            .toList(),
       _ => const [],
     },
   );

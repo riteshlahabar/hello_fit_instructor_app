@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/tokens.dart';
 
-
 /// `input[type=range]` with the "1 km — N km radius — 30 km" caption.
 class RadiusSlider extends StatelessWidget {
-  const RadiusSlider({
-    super.key,required this.value, required this.onChanged});
+  const RadiusSlider({super.key, required this.value, required this.onChanged});
 
   final double value;
   final ValueChanged<double> onChanged;

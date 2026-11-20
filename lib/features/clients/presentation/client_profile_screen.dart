@@ -126,7 +126,8 @@ class ClientProfileScreen extends ConsumerWidget {
       const SizedBox(height: 9),
       const HFFinePrint(
         icon: Icons.phone_disabled_outlined,
-        text: 'Client contact details are not shown here — calls and messages '
+        text:
+            'Client contact details are not shown here — calls and messages '
             'go through HelloFit so both numbers stay private.',
       ),
       const HFSectionHead(title: 'Recent sessions'),

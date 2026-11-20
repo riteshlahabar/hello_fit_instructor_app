@@ -14,9 +14,10 @@ class ApiProfileRepository implements ProfileRepository {
       InstructorProfile.fromJson(data as Map<String, dynamic>);
 
   static List<InstructorDocument> _documents(dynamic data) => switch (data) {
-    final List<dynamic> list => list
-        .map((e) => InstructorDocument.fromJson(e as Map<String, dynamic>))
-        .toList(),
+    final List<dynamic> list =>
+      list
+          .map((e) => InstructorDocument.fromJson(e as Map<String, dynamic>))
+          .toList(),
     _ => const [],
   };
 

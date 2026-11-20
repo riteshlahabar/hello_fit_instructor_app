@@ -43,7 +43,8 @@ bool _professionalDone(InstructorProfile p) =>
 bool _specialisationDone(InstructorProfile p) => p.specialisations.isNotEmpty;
 
 /// Page 16 — every document the API says is required is uploaded.
-bool _documentsDone(InstructorProfile p) => p.onboarding.missingDocuments.isEmpty;
+bool _documentsDone(InstructorProfile p) =>
+    p.onboarding.missingDocuments.isEmpty;
 
 /// Page 18 — base locality and travel radius.
 bool _serviceAreaDone(InstructorProfile p) =>

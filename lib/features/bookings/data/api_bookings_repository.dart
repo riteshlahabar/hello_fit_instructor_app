@@ -11,9 +11,8 @@ class ApiBookingsRepository implements BookingsRepository {
   final ApiClient _api;
 
   static List<BookingRow> _rows(dynamic data) => switch (data) {
-    final List<dynamic> list => list
-        .map((e) => BookingRow.fromJson(e as Map<String, dynamic>))
-        .toList(),
+    final List<dynamic> list =>
+      list.map((e) => BookingRow.fromJson(e as Map<String, dynamic>)).toList(),
     _ => const [],
   };
 
@@ -42,7 +41,12 @@ class ApiBookingsRepository implements BookingsRepository {
           ),
         ),
       ),
-      ApiFailure(:final code, :final message, :final details, :final statusCode) =>
+      ApiFailure(
+        :final code,
+        :final message,
+        :final details,
+        :final statusCode,
+      ) =>
         ApiFailure<BookingPage>(
           code: code,
           message: message,
@@ -62,9 +66,10 @@ class ApiBookingsRepository implements BookingsRepository {
   Future<ApiResult<List<BookingRequest>>> requests() => _api.get(
     '/app/instructor/requests',
     parse: (data) => switch (data) {
-      final List<dynamic> list => list
-          .map((e) => BookingRequest.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      final List<dynamic> list =>
+        list
+            .map((e) => BookingRequest.fromJson(e as Map<String, dynamic>))
+            .toList(),
       _ => const <BookingRequest>[],
     },
   );
@@ -85,7 +90,8 @@ class ApiBookingsRepository implements BookingsRepository {
     '/app/instructor/requests/$requestId/reject',
     body: {
       'reason': reason,
-      if (message != null && message.trim().isNotEmpty) 'message': message.trim(),
+      if (message != null && message.trim().isNotEmpty)
+        'message': message.trim(),
     },
     parse: (_) {},
   );

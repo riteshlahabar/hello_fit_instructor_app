@@ -48,9 +48,9 @@ class _State extends ConsumerState<SpecialisationScreen> {
       _busy = true;
       _status = '';
     });
-    final result = await ref
-        .read(profileControllerProvider.notifier)
-        .save({'specialisations': _selected.toList()});
+    final result = await ref.read(profileControllerProvider.notifier).save({
+      'specialisations': _selected.toList(),
+    });
     if (!mounted) return;
     setState(() => _busy = false);
 
@@ -76,6 +76,8 @@ class _State extends ConsumerState<SpecialisationScreen> {
           'Select the training areas you specialise in. This helps us match '
           'you with clients who share your fitness goals.',
       onBack: context.canPop() ? context.pop : null,
+      // The category master, not the profile: `_selected` is a local draft.
+      onRefresh: () => ref.refresh(serviceCategoriesProvider.future),
       children: [
         const WizardSectionLabel('CHOOSE YOUR SPECIALTIES'),
         ...switch (categories) {

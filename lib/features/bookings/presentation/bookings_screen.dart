@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
+import '../../../core/widgets/hf_refresh.dart';
 import '../../../core/widgets/hf_search_field.dart';
 import '../data/bookings_providers.dart';
 import '../domain/booking_models.dart';
@@ -24,68 +25,62 @@ class BookingsScreen extends ConsumerWidget {
     final page = ref.watch(bookingPageProvider);
     final filter = ref.watch(bookingFilterProvider);
 
-    return RefreshIndicator(
-      color: HFColors.primary,
-      onRefresh: () async => ref.refresh(bookingPageProvider.future),
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-        children: [
-          const _Heading(),
-          HFCountTiles(
-            tiles: [
-              ('${page.value?.summary.total ?? 0}', 'Total bookings'),
-              ('${page.value?.summary.upcoming ?? 0}', 'Upcoming'),
-              ('${page.value?.summary.pending ?? 0}', 'Pending'),
-            ],
-          ),
-          const SizedBox(height: 12),
-          const RequestsBanner(),
-          HFSearchField(
-            hint: 'Search client, service or code',
-            onChanged: (value) =>
-                ref.read(bookingQueryProvider.notifier).set(value),
-          ),
-          const SizedBox(height: 11),
-          HFFilterChips<BookingFilter>(
-            values: BookingFilter.values,
-            labelOf: (value) => value.label,
-            selected: filter,
-            onSelect: (value) =>
-                ref.read(bookingFilterProvider.notifier).set(value),
-          ),
-          const SizedBox(height: 12),
-          ...switch (page) {
-            AsyncLoading() => const [
-              Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: CircularProgressIndicator(color: HFColors.primary),
+    return HFRefreshList(
+      onRefresh: () => ref.refresh(bookingPageProvider.future),
+      children: [
+        const _Heading(),
+        HFCountTiles(
+          tiles: [
+            ('${page.value?.summary.total ?? 0}', 'Total bookings'),
+            ('${page.value?.summary.upcoming ?? 0}', 'Upcoming'),
+            ('${page.value?.summary.pending ?? 0}', 'Pending'),
+          ],
+        ),
+        const SizedBox(height: 12),
+        const RequestsBanner(),
+        HFSearchField(
+          hint: 'Search client, service or code',
+          onChanged: (value) =>
+              ref.read(bookingQueryProvider.notifier).set(value),
+        ),
+        const SizedBox(height: 11),
+        HFFilterChips<BookingFilter>(
+          values: BookingFilter.values,
+          labelOf: (value) => value.label,
+          selected: filter,
+          onSelect: (value) =>
+              ref.read(bookingFilterProvider.notifier).set(value),
+        ),
+        const SizedBox(height: 12),
+        ...switch (page) {
+          AsyncLoading() => const [
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Center(
+                child: CircularProgressIndicator(color: HFColors.primary),
+              ),
+            ),
+          ],
+          AsyncError(:final error) => [HFEmptyPanel(message: '$error')],
+          AsyncValue(:final value?) when value.rows.isEmpty => const [
+            HFEmptyPanel(
+              message: 'No bookings match your search or selected filter.',
+            ),
+          ],
+          AsyncValue(:final value?) => [
+            for (final row in value.rows) ...[
+              BookingCard(
+                row: row,
+                onTap: () => context.pushNamed(
+                  'booking-detail',
+                  pathParameters: {'id': row.sessionId},
                 ),
               ),
+              const SizedBox(height: 9),
             ],
-            AsyncError(:final error) => [
-              HFEmptyPanel(message: '$error'),
-            ],
-            AsyncValue(:final value?) when value.rows.isEmpty => const [
-              HFEmptyPanel(
-                message: 'No bookings match your search or selected filter.',
-              ),
-            ],
-            AsyncValue(:final value?) => [
-              for (final row in value.rows) ...[
-                BookingCard(
-                  row: row,
-                  onTap: () => context.pushNamed(
-                    'booking-detail',
-                    pathParameters: {'id': row.sessionId},
-                  ),
-                ),
-                const SizedBox(height: 9),
-              ],
-            ],
-          },
-        ],
-      ),
+          ],
+        },
+      ],
     );
   }
 }

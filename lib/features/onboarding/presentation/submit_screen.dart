@@ -56,7 +56,10 @@ class _State extends ConsumerState<SubmitScreen> {
   }
 
   bool get _acceptedAlready =>
-      ref.read(profileControllerProvider).value?.onboarding
+      ref
+          .read(profileControllerProvider)
+          .value
+          ?.onboarding
           .codeOfConductAccepted ??
       false;
 
@@ -74,6 +77,7 @@ class _State extends ConsumerState<SubmitScreen> {
           'Send your profile to the HelloFit team. We will review it and let '
           'you know as soon as it is approved.',
       onBack: context.canPop() ? context.pop : null,
+      onRefresh: () => ref.refresh(profileControllerProvider.future),
       children: [
         const WizardSectionLabel('WHAT HAPPENS NEXT'),
         for (final step in const [

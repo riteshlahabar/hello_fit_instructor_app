@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../theme/tokens.dart';
+import 'hf_refresh.dart';
 
 /// The frame pages 31, 32, 33, 34 and 39 share: a back row, the
 /// eyebrow / Anton heading / sub block, then the screen's own content, with an
@@ -39,6 +40,7 @@ class HFPushedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = ListView(
+      physics: HFRefresh.physics,
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
       children: [
         _BackRow(label: backLabel),
@@ -80,11 +82,7 @@ class HFPushedPage extends StatelessWidget {
       body: SafeArea(
         child: onRefresh == null
             ? body
-            : RefreshIndicator(
-                color: HFColors.primary,
-                onRefresh: onRefresh!,
-                child: body,
-              ),
+            : HFRefresh(onRefresh: onRefresh!, child: body),
       ),
       bottomNavigationBar: footer == null
           ? null

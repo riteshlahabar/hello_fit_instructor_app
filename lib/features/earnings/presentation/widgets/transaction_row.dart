@@ -35,9 +35,7 @@ class TransactionRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(HFRadius.symbol),
             ),
             child: Icon(
-              incoming
-                  ? Icons.south_west_rounded
-                  : Icons.north_east_rounded,
+              incoming ? Icons.south_west_rounded : Icons.north_east_rounded,
               size: 14,
               color: incoming ? const Color(0xFF39835E) : HFColors.muted,
             ),

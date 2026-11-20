@@ -65,10 +65,7 @@ class EarningsChart extends StatelessWidget {
                   child: Text(
                     bar.label,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 8,
-                      color: HFColors.muted,
-                    ),
+                    style: const TextStyle(fontSize: 8, color: HFColors.muted),
                   ),
                 ),
               ],

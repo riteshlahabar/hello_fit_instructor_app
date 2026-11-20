@@ -6,6 +6,7 @@ import '../../../core/network/api_result.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_primary_button.dart';
 import '../../profile/data/profile_providers.dart';
+import '../domain/bank_form_rules.dart';
 import 'widgets/bank_account_on_file.dart';
 import 'widgets/bank_fields.dart';
 import 'widgets/payout_method_radio.dart';
@@ -61,11 +62,20 @@ class _State extends ConsumerState<BankAccountScreen> {
     super.dispose();
   }
 
+  /// Reads `GET /app/instructor/bank-account`, and is also what pull-to-
+  /// refresh calls.
+  ///
+  /// The fields are seeded **once**, on the first successful read: a pull must
+  /// never throw away what the trainer has half typed. After that a refresh
+  /// updates only the masked number on file, which is the one thing on this
+  /// screen the server owns.
   Future<void> _load() async {
     final result = await ref.read(profileRepositoryProvider).loadBankAccount();
-    if (!mounted || _loaded) return;
+    if (!mounted) return;
     if (result case ApiSuccess(:final data) when data != null) {
       setState(() {
+        _existingMask = data.accountNumberMasked;
+        if (_loaded) return;
         _loaded = true;
         _method = data.payoutMethod;
         _holder.text = data.holderName ?? '';
@@ -73,39 +83,25 @@ class _State extends ConsumerState<BankAccountScreen> {
         _ifsc.text = data.ifsc ?? '';
         _upi.text = data.upiId ?? '';
         _type = data.accountType ?? 'SAVINGS';
-        _existingMask = data.accountNumberMasked;
       });
     }
   }
 
-  /// Mirrors `UpsertBankAccountDto` so nobody has to submit to find out — and
-  /// only the chosen side is checked, exactly as the DTO does it.
+  /// The rules themselves live in `domain/bank_form_rules.dart`.
   bool _validate() {
-    _errors.clear();
-
-    if (_method == 'UPI') {
-      final upi = _upi.text.trim();
-      if (!RegExp(r'^[\w.\-]{2,60}@[A-Za-z]{2,30}$').hasMatch(upi)) {
-        _errors['upi'] = 'UPI ID should look like name@bank';
-      }
-    } else {
-      if (_holder.text.trim().length < 2) {
-        _errors['holder'] = 'Enter the name as per bank records';
-      }
-      if (_bank.text.trim().length < 2) {
-        _errors['bank'] = 'Enter your bank name';
-      }
-      if (!RegExp(r'^\d{9,18}$').hasMatch(_account.text.trim())) {
-        _errors['account'] = 'Account number must be 9 to 18 digits';
-      } else if (_account.text.trim() != _confirm.text.trim()) {
-        _errors['confirm'] = 'Account numbers do not match';
-      }
-      if (!RegExp(
-        r'^[A-Z]{4}0[A-Z0-9]{6}$',
-      ).hasMatch(_ifsc.text.trim().toUpperCase())) {
-        _errors['ifsc'] = 'Enter a valid IFSC, e.g. HDFC0001234';
-      }
-    }
+    _errors
+      ..clear()
+      ..addAll(
+        bankFormErrors(
+          method: _method,
+          holder: _holder.text,
+          bank: _bank.text,
+          account: _account.text,
+          confirm: _confirm.text,
+          ifsc: _ifsc.text,
+          upi: _upi.text,
+        ),
+      );
 
     setState(() {});
     return _errors.isEmpty;
@@ -152,6 +148,7 @@ class _State extends ConsumerState<BankAccountScreen> {
       title: 'Payout\nDetails',
       sub: 'Where your earnings are transferred once a session is completed.',
       onBack: context.canPop() ? context.pop : null,
+      onRefresh: _load,
       children: [
         // Only meaningful alongside the bank side — a UPI payout has no
         // account number to have on file.

@@ -5,6 +5,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
+import '../../../core/widgets/hf_refresh.dart';
 import '../../../core/widgets/hf_pieces.dart';
 import '../data/earnings_providers.dart';
 import '../domain/earnings_models.dart';
@@ -26,37 +27,33 @@ class EarningsScreen extends ConsumerWidget {
     final summary = ref.watch(earningsSummaryProvider);
     final period = ref.watch(earningsPeriodProvider);
 
-    return RefreshIndicator(
-      color: HFColors.primary,
-      onRefresh: () async => ref.refresh(earningsSummaryProvider.future),
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-        children: [
-          const _Heading(),
-          HFFilterChips<EarningsPeriod>(
-            values: EarningsPeriod.values,
-            labelOf: (value) => value.label,
-            selected: period,
-            onSelect: (value) =>
-                ref.read(earningsPeriodProvider.notifier).set(value),
-          ),
-          const SizedBox(height: 13),
-          ...switch (summary) {
-            AsyncValue(:final value?) => _body(value, period),
-            AsyncError(:final error) => [
-              HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
-            ],
-            _ => const [
-              Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: CircularProgressIndicator(color: HFColors.primary),
-                ),
+    return HFRefreshList(
+      onRefresh: () => ref.refresh(earningsSummaryProvider.future),
+      children: [
+        const _Heading(),
+        HFFilterChips<EarningsPeriod>(
+          values: EarningsPeriod.values,
+          labelOf: (value) => value.label,
+          selected: period,
+          onSelect: (value) =>
+              ref.read(earningsPeriodProvider.notifier).set(value),
+        ),
+        const SizedBox(height: 13),
+        ...switch (summary) {
+          AsyncValue(:final value?) => _body(value, period),
+          AsyncError(:final error) => [
+            HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
+          ],
+          _ => const [
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Center(
+                child: CircularProgressIndicator(color: HFColors.primary),
               ),
-            ],
-          },
-        ],
-      ),
+            ),
+          ],
+        },
+      ],
     );
   }
 

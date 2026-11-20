@@ -91,7 +91,10 @@ class WizardInput extends StatelessWidget {
         hintStyle: const TextStyle(fontSize: 11, color: Color(0xFFB2A69A)),
         filled: true,
         fillColor: enabled ? Colors.white : HFColors.soft,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 14,
+        ),
         enabledBorder: _border(_fieldBorder),
         disabledBorder: _border(_fieldBorder),
         focusedBorder: _border(HFColors.primary, width: 1.5),
@@ -140,7 +143,10 @@ class WizardDropdown<T> extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 14,
+        ),
         enabledBorder: WizardInput._border(_fieldBorder),
         focusedBorder: WizardInput._border(HFColors.primary, width: 1.5),
       ),

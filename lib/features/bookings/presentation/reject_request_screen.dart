@@ -105,7 +105,8 @@ class _State extends ConsumerState<RejectRequestScreen> {
       backLabel: 'Booking Requests',
       eyebrow: 'Booking request · Decision',
       title: 'DECLINE THIS\nBOOKING?',
-      sub: "If you can't take this session, choose a reason and send a clear "
+      sub:
+          "If you can't take this session, choose a reason and send a clear "
           'update to the client.',
       footer: HFActionPair(
         secondaryLabel: 'Go Back',

@@ -23,10 +23,12 @@ final clientQueryProvider = NotifierProvider<UiState<String>, String>(
 /// Page 38. Both the chip and the search box are server-side filters, so the
 /// list is a single watched call rather than a local `where`.
 final clientPageProvider = FutureProvider<ClientPage>((ref) async {
-  final result = await ref.watch(clientsRepositoryProvider).list(
-    filter: ref.watch(clientFilterProvider),
-    query: ref.watch(clientQueryProvider),
-  );
+  final result = await ref
+      .watch(clientsRepositoryProvider)
+      .list(
+        filter: ref.watch(clientFilterProvider),
+        query: ref.watch(clientQueryProvider),
+      );
 
   return switch (result) {
     ApiSuccess(:final data) => data,

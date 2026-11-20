@@ -25,6 +25,7 @@ class ProfilePreviewScreen extends ConsumerWidget {
       title: 'Your Profile,\nAs Clients See It',
       sub: 'This is what a client reads before sending you a booking request.',
       onBack: context.canPop() ? context.pop : null,
+      onRefresh: () => ref.refresh(profileControllerProvider.future),
       children: profile == null
           ? const [Center(child: CircularProgressIndicator())]
           : [

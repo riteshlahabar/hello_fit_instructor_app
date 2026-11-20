@@ -28,7 +28,8 @@ class RequestsScreen extends ConsumerWidget {
       backLabel: 'All Bookings',
       eyebrow: 'Take action on new leads',
       title: 'NEW BOOKING\nREQUESTS.',
-      sub: 'Check the details and respond to clients waiting for '
+      sub:
+          'Check the details and respond to clients waiting for '
           'confirmation.',
       onRefresh: () async => ref.refresh(bookingRequestsProvider.future),
       children: [
@@ -71,10 +72,7 @@ class RequestsScreen extends ConsumerWidget {
   /// being asked for; declining is one tap further in, on page 33's own
   /// Decline button. The design's card has one Respond button, not two.
   void _respond(BuildContext context, BookingRequest request) {
-    context.pushNamed(
-      'request-accept',
-      pathParameters: {'id': request.id},
-    );
+    context.pushNamed('request-accept', pathParameters: {'id': request.id});
   }
 }
 
@@ -116,10 +114,7 @@ class _Banner extends StatelessWidget {
                   count == 0
                       ? 'New requests will appear here as they arrive.'
                       : 'Respond promptly to secure the booking.',
-                  style: const TextStyle(
-                    fontSize: 8,
-                    color: Color(0xFF9B6A5D),
-                  ),
+                  style: const TextStyle(fontSize: 8, color: Color(0xFF9B6A5D)),
                 ),
               ],
             ),

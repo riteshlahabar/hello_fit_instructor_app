@@ -13,10 +13,7 @@ void main() {
         // The shell's IndexedStack builds all five tabs, so every one of their
         // reads has to be answered or the spinner never settles.
         overrides: tabOverrides,
-        child: MaterialApp(
-          theme: AppTheme.light(),
-          home: const TrainerShell(),
-        ),
+        child: MaterialApp(theme: AppTheme.light(), home: const TrainerShell()),
       ),
     );
     await tester.pumpAndSettle();

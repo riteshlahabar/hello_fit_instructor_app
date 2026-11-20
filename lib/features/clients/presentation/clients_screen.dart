@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
+import '../../../core/widgets/hf_refresh.dart';
 import '../../../core/widgets/hf_search_field.dart';
 import '../data/clients_providers.dart';
 import '../domain/client_models.dart';
@@ -26,68 +27,64 @@ class ClientsScreen extends ConsumerWidget {
     final filter = ref.watch(clientFilterProvider);
     final summary = page.value?.summary ?? ClientSummary.empty;
 
-    return RefreshIndicator(
-      color: HFColors.primary,
-      onRefresh: () async => ref.refresh(clientPageProvider.future),
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-        children: [
-          const _Heading(),
-          HFCountTiles(
-            tiles: [
-              ('${summary.all}', 'All clients'),
-              ('${summary.active}', 'Active'),
-              ('${summary.inactive}', 'Inactive'),
-            ],
-          ),
-          const SizedBox(height: 12),
-          HFSearchField(
-            hint: 'Search client or service',
-            onChanged: (value) =>
-                ref.read(clientQueryProvider.notifier).set(value),
-          ),
-          const SizedBox(height: 11),
-          HFFilterChips<ClientFilter>(
-            values: ClientFilter.values,
-            labelOf: (value) => value.label,
-            selected: filter,
-            onSelect: (value) =>
-                ref.read(clientFilterProvider.notifier).set(value),
-          ),
-          const SizedBox(height: 12),
-          ...switch (page) {
-            AsyncLoading() => const [
-              Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: CircularProgressIndicator(color: HFColors.primary),
+    return HFRefreshList(
+      onRefresh: () => ref.refresh(clientPageProvider.future),
+      children: [
+        const _Heading(),
+        HFCountTiles(
+          tiles: [
+            ('${summary.all}', 'All clients'),
+            ('${summary.active}', 'Active'),
+            ('${summary.inactive}', 'Inactive'),
+          ],
+        ),
+        const SizedBox(height: 12),
+        HFSearchField(
+          hint: 'Search client or service',
+          onChanged: (value) =>
+              ref.read(clientQueryProvider.notifier).set(value),
+        ),
+        const SizedBox(height: 11),
+        HFFilterChips<ClientFilter>(
+          values: ClientFilter.values,
+          labelOf: (value) => value.label,
+          selected: filter,
+          onSelect: (value) =>
+              ref.read(clientFilterProvider.notifier).set(value),
+        ),
+        const SizedBox(height: 12),
+        ...switch (page) {
+          AsyncLoading() => const [
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Center(
+                child: CircularProgressIndicator(color: HFColors.primary),
+              ),
+            ),
+          ],
+          AsyncError(:final error) => [
+            HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
+          ],
+          AsyncValue(:final value?) when value.rows.isEmpty => const [
+            HFEmptyPanel(
+              message: 'No clients match your search or selected filter.',
+            ),
+          ],
+          AsyncValue(:final value?) => [
+            _Count(shown: value.rows.length),
+            for (final client in value.rows) ...[
+              ClientCard(
+                client: client,
+                onTap: () => context.pushNamed(
+                  'client-profile',
+                  pathParameters: {'id': client.id},
                 ),
               ),
+              const SizedBox(height: 9),
             ],
-            AsyncError(:final error) => [
-              HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
-            ],
-            AsyncValue(:final value?) when value.rows.isEmpty => const [
-              HFEmptyPanel(
-                message: 'No clients match your search or selected filter.',
-              ),
-            ],
-            AsyncValue(:final value?) => [
-              _Count(shown: value.rows.length),
-              for (final client in value.rows) ...[
-                ClientCard(
-                  client: client,
-                  onTap: () => context.pushNamed(
-                    'client-profile',
-                    pathParameters: {'id': client.id},
-                  ),
-                ),
-                const SizedBox(height: 9),
-              ],
-            ],
-          },
-        ],
-      ),
+          ],
+        },
+      ],
     );
   }
 }
