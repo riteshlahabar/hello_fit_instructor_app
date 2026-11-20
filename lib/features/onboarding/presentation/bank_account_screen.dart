@@ -21,7 +21,12 @@ import 'widgets/wizard_scaffold.dart';
 /// The number is write-only: the API returns `••••6789`, never the account,
 /// so an existing account shows masked and must be retyped to change.
 class BankAccountScreen extends ConsumerStatefulWidget {
-  const BankAccountScreen({super.key});
+  const BankAccountScreen({super.key, this.inWizard = true});
+
+  /// False when the profile tab opened it (client, 20-11-2026): a trainer
+  /// editing their payout details must come back to Profile, not be pushed on
+  /// to the submit screen they already passed.
+  final bool inWizard;
 
   @override
   ConsumerState<BankAccountScreen> createState() => _State();
@@ -127,7 +132,13 @@ class _State extends ConsumerState<BankAccountScreen> {
 
     switch (result) {
       case ApiSuccess():
-        context.push('/onboarding/submit');
+        if (widget.inWizard) {
+          context.push('/onboarding/submit');
+        } else if (context.canPop()) {
+          context.pop();
+        } else {
+          setState(() => _status = 'Bank details saved');
+        }
       case ApiFailure(:final message):
         setState(() => _status = message);
     }

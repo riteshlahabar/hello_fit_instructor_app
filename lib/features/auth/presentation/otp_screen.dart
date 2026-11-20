@@ -7,7 +7,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/network/api_result.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_primary_button.dart';
+import '../../onboarding/domain/wizard_resume.dart';
+import '../../profile/data/profile_providers.dart';
 import '../data/auth_providers.dart';
+import '../domain/app_session.dart';
 import 'widgets/auth_scaffold.dart';
 import 'widgets/otp_boxes.dart';
 
@@ -82,12 +85,31 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
     switch (result) {
       case ApiSuccess(:final data):
-        // A first OTP login only ever creates a CUSTOMER, so a trainer who
-        // has not applied yet goes to the wizard, not the shell.
-        context.go(data.needsApplication ? '/onboarding/profile' : '/');
+        await _land(data);
       case ApiFailure(:final message):
         setState(() => _status = message);
     }
+  }
+
+  /// Where sign-in lands. A first OTP login only ever creates a CUSTOMER, so
+  /// an account with no profile row starts the wizard at page 12.
+  ///
+  /// A submitted application goes home even while it waits for approval
+  /// (client, 20-11-2026). A still-unsubmitted one resumes at the first page
+  /// it has not filled, which takes the profile — hence the landing provider
+  /// rather than a constant.
+  Future<void> _land(AppSession session) async {
+    if (!session.hasInstructorProfile) {
+      context.go(wizardOrder.first);
+      return;
+    }
+    if (!session.needsApplication) {
+      context.go('/');
+      return;
+    }
+    final route = await ref.refresh(landingRouteProvider.future);
+    if (!mounted) return;
+    context.go(route);
   }
 
   String get _masked {

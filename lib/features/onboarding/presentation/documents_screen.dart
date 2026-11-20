@@ -15,7 +15,10 @@ import 'widgets/wizard_scaffold.dart';
 /// The rows are the API's own `onboarding.requiredDocuments`, not a list
 /// hard-coded here: the policy lives in `settings.defaults.ts`.
 class DocumentsScreen extends ConsumerStatefulWidget {
-  const DocumentsScreen({super.key});
+  const DocumentsScreen({super.key, this.inWizard = true});
+
+  /// False when the profile tab opened it — see [BankAccountScreen.inWizard].
+  final bool inWizard;
 
   @override
   ConsumerState<DocumentsScreen> createState() => _State();
@@ -96,8 +99,10 @@ class _State extends ConsumerState<DocumentsScreen> {
           ),
         const SizedBox(height: 16),
         HFPrimaryButton(
-          label: 'SAVE & CONTINUE',
-          onPressed: () => context.push('/onboarding/service-area'),
+          label: widget.inWizard ? 'SAVE & CONTINUE' : 'DONE',
+          onPressed: () => widget.inWizard
+              ? context.push('/onboarding/service-area')
+              : context.pop(),
         ),
         SizedBox(
           height: 22,

@@ -10,7 +10,6 @@ import '../../../core/widgets/hf_primary_button.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../profile/data/profile_providers.dart';
 import 'widgets/dob_gender_row.dart';
-import 'widgets/logout_button.dart';
 import 'widgets/photo_picker_row.dart';
 import 'widgets/wizard_field.dart';
 import 'widgets/wizard_scaffold.dart';
@@ -139,7 +138,6 @@ class _State extends ConsumerState<CreateProfileScreen> {
           'Let’s get to know you. Add your basic details to start building '
           'your HelloFit trainer profile.',
       onBack: context.canPop() ? context.pop : null,
-      trailing: const LogoutButton(),
       children: [
         const WizardSectionLabel('PROFILE PHOTO'),
         PhotoPickerRow(file: _photo, busy: _busy, onPicked: _uploadPhoto),

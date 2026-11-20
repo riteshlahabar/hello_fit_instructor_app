@@ -9,6 +9,8 @@ import 'package:trainer_app/features/auth/domain/app_session.dart';
 import 'package:trainer_app/features/auth/domain/auth_repository.dart';
 import 'package:trainer_app/features/profile/data/profile_providers.dart';
 
+import 'support/fake_tab_repositories.dart';
+
 /// Stands in for the keystore-backed repository, which cannot run in a test.
 class _FakeAuthRepository implements AuthRepository {
   _FakeAuthRepository({required this.stored, this.throwOnRead = false});
@@ -45,6 +47,8 @@ Future<void> _pump(
     ProviderScope(
       overrides: [
         authRepositoryProvider.overrideWithValue(repo),
+        // One of these cases lands on the shell, which builds every tab.
+        ...tabOverrides,
         if (landing != null)
           landingRouteProvider.overrideWith((ref) async => landing),
       ],

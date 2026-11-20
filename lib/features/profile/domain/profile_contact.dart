@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-/// The address, professional-background and studio half of a provider's
-/// profile — the columns added for the onboarding wizard on 19 Nov 2026
+/// The address and professional-background half of a provider's profile — the
+/// columns added for the onboarding wizard on 19 Nov 2026
 /// (`InstructorContactDto` on the API side).
 ///
 /// Grouped rather than flattened onto [InstructorProfile] so neither file
@@ -20,8 +20,6 @@ class ProfileContact {
     this.institute,
     this.clientsTrainedBand,
     this.serviceLocality,
-    this.studioName,
-    this.studioAddress,
   });
 
   factory ProfileContact.fromJson(Map<String, dynamic> json) => ProfileContact(
@@ -35,8 +33,6 @@ class ProfileContact {
     institute: json['institute'] as String?,
     clientsTrainedBand: json['clientsTrainedBand'] as String?,
     serviceLocality: json['serviceLocality'] as String?,
-    studioName: json['studioName'] as String?,
-    studioAddress: json['studioAddress'] as String?,
   );
 
   /// Postal address (page 13).
@@ -54,6 +50,4 @@ class ProfileContact {
 
   /// Where they work (page 18).
   final String? serviceLocality;
-  final String? studioName;
-  final String? studioAddress;
 }

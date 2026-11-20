@@ -15,12 +15,6 @@ import 'widgets/wizard_scaffold.dart';
 class ProfilePreviewScreen extends ConsumerWidget {
   const ProfilePreviewScreen({super.key});
 
-  static const _formats = {
-    'CUSTOMER_HOME': 'At the client’s home',
-    'PROVIDER_LOCATION': 'At my location',
-    'ONLINE': 'Online',
-  };
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileControllerProvider).value;
@@ -42,13 +36,6 @@ class ProfilePreviewScreen extends ConsumerWidget {
                 PreviewChips(
                   title: 'Specialities',
                   values: profile.specialisations,
-                ),
-              if (profile.sessionFormats.isNotEmpty)
-                PreviewChips(
-                  title: 'Session location',
-                  values: [
-                    for (final f in profile.sessionFormats) _formats[f] ?? f,
-                  ],
                 ),
               if (profile.languages.isNotEmpty)
                 PreviewChips(title: 'Languages', values: profile.languages),

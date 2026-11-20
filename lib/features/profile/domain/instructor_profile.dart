@@ -91,11 +91,11 @@ class InstructorProfile {
     required this.experienceYears,
     required this.languages,
     required this.specialisations,
-    required this.sessionFormats,
     required this.onboarding,
     required this.documents,
     required this.contact,
     this.bio,
+    this.email,
     this.gender,
     this.dob,
     this.travelRadiusKm,
@@ -109,13 +109,13 @@ class InstructorProfile {
     experienceYears: (json['experienceYears'] as num?)?.toInt() ?? 0,
     languages: _strings(json['languages']),
     specialisations: _strings(json['specialisations']),
-    sessionFormats: _strings(json['sessionFormats']),
     onboarding: OnboardingStatus.fromJson(
       (json['onboarding'] as Map<String, dynamic>?) ?? const {},
     ),
     contact: ProfileContact.fromJson(json),
     documents: documents,
     bio: json['bio'] as String?,
+    email: json['email'] as String?,
     gender: json['gender'] as String?,
     dob: parseApiDate(json['dob']),
     travelRadiusKm: (json['travelRadiusKm'] as num?)?.toInt(),
@@ -125,12 +125,15 @@ class InstructorProfile {
   final int experienceYears;
   final List<String> languages;
   final List<String> specialisations;
-  final List<String> sessionFormats;
   final OnboardingStatus onboarding;
   final List<InstructorDocument> documents;
 
   /// The address and professional-background columns (19 Nov 2026).
   final ProfileContact contact;
+  /// A User column, flattened onto the own-profile response so page 66's box
+  /// can show the address already on file (client, 20-11-2026).
+  final String? email;
+
   final String? bio;
   final String? gender;
   final DateTime? dob;
@@ -142,11 +145,11 @@ class InstructorProfile {
         experienceYears: experienceYears,
         languages: languages,
         specialisations: specialisations,
-        sessionFormats: sessionFormats,
         onboarding: onboarding,
         documents: docs,
         contact: contact,
         bio: bio,
+        email: email,
         gender: gender,
         dob: dob,
         travelRadiusKm: travelRadiusKm,

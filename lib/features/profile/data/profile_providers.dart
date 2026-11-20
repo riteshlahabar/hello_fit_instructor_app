@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_result.dart';
 import '../../auth/data/auth_providers.dart';
+import '../../onboarding/domain/wizard_resume.dart';
 import '../domain/instructor_profile.dart';
 import '../domain/profile_repository.dart';
 import 'api_profile_repository.dart';
@@ -98,8 +99,14 @@ final profileControllerProvider =
 
 /// Where a signed-in trainer belongs on launch.
 ///
-/// A profile row is not enough: an application that is still in review, or was
-/// rejected, belongs in the wizard. Only an approved trainer reaches the shell.
+/// A submitted application belongs at home even while it waits: `submit`
+/// leaves the stage at DOCUMENTS_SUBMITTED and approval is the admin's own
+/// step, so gating the shell on APPROVED stranded every waiting trainer in the
+/// wizard (client, 20-11-2026). The dashboard's verification banner carries
+/// the pending and rejected cases.
+///
+/// A still-unsubmitted applicant resumes at the first page they have not
+/// filled, rather than retyping page 12 — see [wizardResumeRoute].
 ///
 /// Never throws. The splash waits on this before it navigates, so an error
 /// here would leave the app on the splash screen for good; the wizard is the
@@ -107,9 +114,11 @@ final profileControllerProvider =
 final landingRouteProvider = FutureProvider<String>((ref) async {
   try {
     final profile = await ref.watch(profileControllerProvider.future);
-    final approved = profile?.onboarding.isApproved ?? false;
-    return approved ? '/' : '/onboarding/profile';
+    if (profile == null) return wizardOrder.first;
+    // Anything past APPLIED has been submitted: home, banner and all.
+    if (profile.onboarding.stage != 'APPLIED') return '/';
+    return wizardResumeRoute(profile);
   } catch (_) {
-    return '/onboarding/profile';
+    return wizardOrder.first;
   }
 });

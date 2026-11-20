@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_bottom_nav.dart';
 import '../../../core/widgets/hf_header.dart';
+import '../../bookings/presentation/bookings_screen.dart';
+import '../../clients/presentation/clients_screen.dart';
 import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../earnings/presentation/earnings_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
 import 'shell_controller.dart';
-import 'tab_placeholder.dart';
 
 /// The trainer shell — header bar on top, tab bar at the foot.
 /// Tab order and labels come from the `nav` in the client's page-24 HTML.
@@ -37,10 +40,10 @@ class TrainerShell extends ConsumerWidget {
                 index: tab.index,
                 children: const [
                   DashboardScreen(),
-                  TabPlaceholder(label: 'Bookings'),
-                  TabPlaceholder(label: 'Clients'),
-                  TabPlaceholder(label: 'Earnings'),
-                  TabPlaceholder(label: 'Profile'),
+                  BookingsScreen(),
+                  ClientsScreen(),
+                  EarningsScreen(),
+                  ProfileScreen(),
                 ],
               ),
             ),

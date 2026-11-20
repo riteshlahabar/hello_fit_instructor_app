@@ -24,8 +24,9 @@ class WizardScaffold extends StatelessWidget {
   /// e.g. `STEP 1 OF 6`, or `PROFILE SETUP` on the pages outside the count.
   final String stepLabel;
 
-  /// 0..1 — the width of `.progress span`.
-  final double progress;
+  /// 0..1 — the width of `.progress span`. Null hides the bar, for the
+  /// screens outside the wizard that borrow this frame (page 66).
+  final double? progress;
   final String title;
   final String sub;
   final List<Widget> children;
@@ -80,18 +81,23 @@ class WizardScaffold extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 17, 0, 19),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(9),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    minHeight: 5,
-                    backgroundColor: const Color(0xFFEADFD4),
-                    valueColor: const AlwaysStoppedAnimation(HFColors.primary),
+              if (progress != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 17, 0, 19),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(9),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 5,
+                      backgroundColor: const Color(0xFFEADFD4),
+                      valueColor: const AlwaysStoppedAnimation(
+                        HFColors.primary,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                )
+              else
+                const SizedBox(height: 17),
               Text(title, style: AppTheme.display(34)),
               const SizedBox(height: 9),
               Text(

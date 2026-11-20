@@ -8,15 +8,14 @@ import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_primary_button.dart';
 import '../../profile/data/profile_providers.dart';
 import 'widgets/radius_slider.dart';
-import 'widgets/training_mode_tiles.dart';
 import 'widgets/wizard_field.dart';
 import 'widgets/wizard_scaffold.dart';
 
-/// Page 18 — Service Areas & Training Locations.
+/// Page 18 — Service Areas.
 ///
-/// The HTML offers four modes; `SessionFormat` has three. "Outdoor / Park" is
-/// deliberately absent rather than folded into another value — see
-/// `state/frontend/trainer-app.md`.
+/// Session location went on 20-11-2026 (client): HelloFit is home-service
+/// only, every trainer travels to the customer, so the page is the base
+/// locality and the travel radius — there is nothing left to choose.
 class ServiceAreaScreen extends ConsumerStatefulWidget {
   const ServiceAreaScreen({super.key});
 
@@ -28,8 +27,6 @@ class _State extends ConsumerState<ServiceAreaScreen> {
   final _locality = TextEditingController();
   final _city = TextEditingController();
   final _pincode = TextEditingController();
-  final _studio = TextEditingController();
-  final _formats = <String>{'CUSTOMER_HOME'};
   double _radius = 10;
   final _errors = <String, String>{};
   String _status = '';
@@ -38,7 +35,7 @@ class _State extends ConsumerState<ServiceAreaScreen> {
 
   @override
   void dispose() {
-    for (final c in [_locality, _city, _pincode, _studio]) {
+    for (final c in [_locality, _city, _pincode]) {
       c.dispose();
     }
     super.dispose();
@@ -52,13 +49,7 @@ class _State extends ConsumerState<ServiceAreaScreen> {
     _locality.text = profile.contact.serviceLocality ?? '';
     _city.text = profile.contact.city ?? '';
     _pincode.text = profile.contact.pincode ?? '';
-    _studio.text = profile.contact.studioName ?? '';
     _radius = (profile.travelRadiusKm ?? 10).toDouble().clamp(1, 30);
-    if (profile.sessionFormats.isNotEmpty) {
-      _formats
-        ..clear()
-        ..addAll(profile.sessionFormats);
-    }
   }
 
   Future<void> _save() async {
@@ -71,9 +62,8 @@ class _State extends ConsumerState<ServiceAreaScreen> {
     if (pin.isNotEmpty && !RegExp(r'^\d{6}$').hasMatch(pin)) {
       _errors['pincode'] = 'PIN code must be 6 digits';
     }
-    if (_formats.isEmpty) _status = 'Choose at least one training location';
     setState(() {});
-    if (_errors.isNotEmpty || _formats.isEmpty) return;
+    if (_errors.isNotEmpty) return;
 
     setState(() {
       _busy = true;
@@ -85,10 +75,6 @@ class _State extends ConsumerState<ServiceAreaScreen> {
       // Omitted when blank: the DTO's six-digit rule rejects an empty string.
       if (pin.isNotEmpty) 'pincode': pin,
       'travelRadiusKm': _radius.round(),
-      'sessionFormats': _formats.toList(),
-      'studioName': _formats.contains('PROVIDER_LOCATION')
-          ? _studio.text.trim()
-          : '',
     });
     if (!mounted) return;
     setState(() => _busy = false);
@@ -111,8 +97,8 @@ class _State extends ConsumerState<ServiceAreaScreen> {
       progress: 5 / 6,
       title: 'Service Areas &\nTraining Locations',
       sub:
-          'Tell clients where you train. Set your base location, travel '
-          'distance and the training options you offer.',
+          'Tell clients where you work. Set your base location and how far '
+          'you are willing to travel to a session.',
       onBack: context.canPop() ? context.pop : null,
       children: [
         const WizardSectionLabel('YOUR BASE LOCATION'),
@@ -157,21 +143,6 @@ class _State extends ConsumerState<ServiceAreaScreen> {
             onChanged: (v) => setState(() => _radius = v),
           ),
         ),
-        const WizardSectionLabel('HOW DO YOU TRAIN?'),
-        TrainingModeTiles(
-          selected: _formats,
-          onToggle: (value) => setState(() {
-            if (!_formats.remove(value)) _formats.add(value);
-          }),
-        ),
-        if (_formats.contains('PROVIDER_LOCATION'))
-          WizardField(
-            label: 'STUDIO / GYM NAME & ADDRESS',
-            child: WizardInput(
-              controller: _studio,
-              hint: 'Enter your studio name or address',
-            ),
-          ),
         const SizedBox(height: 8),
         HFPrimaryButton(
           label: 'SAVE & CONTINUE',
