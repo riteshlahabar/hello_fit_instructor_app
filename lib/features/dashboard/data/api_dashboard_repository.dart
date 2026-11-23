@@ -76,6 +76,7 @@ class ApiDashboardRepository implements DashboardRepository {
         initials: json['initials'] as String? ?? '?',
         title: json['title'] as String? ?? 'New client request',
         subtitle: json['subtitle'] as String? ?? '',
+        sessionId: json['sessionId'] as String? ?? '',
       );
 
   /// `APPROVED` is the only stage that clears the banner. `REJECTED` shows

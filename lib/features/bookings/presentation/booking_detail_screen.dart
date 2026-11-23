@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_refresh.dart';
-import '../../../core/widgets/hf_action_pair.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_field_grid.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_note_field.dart';
 import '../../../core/widgets/hf_pieces.dart';
-import '../../../core/widgets/hf_pushed_page.dart';
+import '../../shell/presentation/widgets/trainer_page.dart';
 import '../data/bookings_providers.dart';
 import '../domain/booking_request.dart';
+import 'widgets/booking_close_actions.dart';
 import 'widgets/booking_state_strip.dart';
 
-/// Page 32 — Booking Details. Reached from a card on page 30, 31 or 37.
+/// Page 32 — Booking Details. Reached from the home screen's "Review"
+/// and from a card on page 30 or 37.
 ///
-/// The accept/decline bar at the foot appears only while an answer is still
-/// owed ([BookingDetail.awaitsAnswer]); for a booking already answered the
-/// screen is read-only, which is what pages 30 and 37 push into.
+/// **No Accept and no Decline here** (client, 23-11-2026). The answer to an
+/// offer is given on page 33 or 34; page 31's requests inbox, which used to
+/// open them, was deleted on 23-11-2026 at the client's word, so those two
+/// screens currently have no entry point — ask before adding one.
+/// [BookingDetail.awaitsAnswer] still drives the state strip at the top,
+/// which says an answer is owed.
+///
+/// What this screen *does* answer is how the booking ends: [BookingCloseActions]
+/// closes it as Completed or Cancelled (client, 23-11-2026), in place of the
+/// note block that used to sit at the bottom.
 class BookingDetailScreen extends ConsumerWidget {
   const BookingDetailScreen({super.key, required this.sessionId});
 
@@ -32,7 +39,11 @@ class BookingDetailScreen extends ConsumerWidget {
         ref.refresh(bookingDetailProvider(sessionId).future);
 
     return switch (detail) {
-      AsyncValue(:final value?) => _Body(detail: value, onRefresh: refresh),
+      AsyncValue(:final value?) => _Body(
+        sessionId: sessionId,
+        detail: value,
+        onRefresh: refresh,
+      ),
       AsyncError(:final error) => _Frame(
         onRefresh: refresh,
         children: [
@@ -47,20 +58,16 @@ class BookingDetailScreen extends ConsumerWidget {
 /// The page's chrome, shared by its loading, error and loaded states so the
 /// heading does not appear only once the request has answered.
 class _Frame extends StatelessWidget {
-  const _Frame({required this.children, this.footer, this.onRefresh});
+  const _Frame({required this.children, this.onRefresh});
 
   final List<Widget> children;
-  final Widget? footer;
   final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
-    return HFPushedPage(
-      backLabel: 'Bookings',
-      eyebrow: 'Review before you decide',
-      title: 'BOOKING\nDETAILS.',
+    return TrainerPage(
+      heading: 'Booking Details',
       sub: "Check the client's requirements and preferred session schedule.",
-      footer: footer,
       onRefresh: onRefresh,
       children: children,
     );
@@ -68,8 +75,13 @@ class _Frame extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.detail, required this.onRefresh});
+  const _Body({
+    required this.sessionId,
+    required this.detail,
+    required this.onRefresh,
+  });
 
+  final String sessionId;
   final BookingDetail detail;
   final Future<void> Function() onRefresh;
 
@@ -79,20 +91,6 @@ class _Body extends StatelessWidget {
 
     return _Frame(
       onRefresh: onRefresh,
-      footer: detail.awaitsAnswer && detail.requestId != null
-          ? HFActionPair(
-              secondaryLabel: 'Decline',
-              primaryLabel: 'Accept Booking',
-              onSecondary: () => context.pushNamed(
-                'request-reject',
-                pathParameters: {'id': detail.requestId!},
-              ),
-              onPrimary: () => context.pushNamed(
-                'request-accept',
-                pathParameters: {'id': detail.requestId!},
-              ),
-            )
-          : null,
       children: [
         BookingStateStrip(detail: detail),
         const SizedBox(height: 12),
@@ -109,7 +107,7 @@ class _Body extends StatelessWidget {
                     Text(
                       row.client.name,
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: HFColors.ink,
                       ),
@@ -118,7 +116,7 @@ class _Body extends StatelessWidget {
                     Text(
                       'Booking ${row.bookingCode}',
                       style: const TextStyle(
-                        fontSize: 9,
+                        fontSize: 10,
                         color: HFColors.muted,
                       ),
                     ),
@@ -157,15 +155,12 @@ class _Body extends StatelessWidget {
             text: notes.trim(),
           ),
         ],
-        const HFSectionHead(title: 'Your note on this booking'),
-        // Read-only on purpose: the note is written on page 33, and a second
-        // place to save it would be a second endpoint nobody has asked for.
-        HFFinePrint(
-          icon: Icons.sticky_note_2_outlined,
-          text: detail.notes?.trim().isNotEmpty == true
-              ? detail.notes!.trim()
-              : 'Not yet submitted. Add one when you accept the request.',
-        ),
+        // The note block that used to close this screen was deleted on
+        // 23-11-2026 at the client's word — the trainer's own note is written
+        // on page 33 and nobody needed it read back here. These are the two
+        // buttons that took its place.
+        if (detail.canClose)
+          BookingCloseActions(sessionId: sessionId, detail: detail),
         const SizedBox(height: 14),
       ],
     );

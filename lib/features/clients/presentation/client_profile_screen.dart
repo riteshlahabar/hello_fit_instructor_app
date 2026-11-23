@@ -7,7 +7,7 @@ import '../../../core/widgets/hf_field_grid.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_note_field.dart';
 import '../../../core/widgets/hf_pieces.dart';
-import '../../../core/widgets/hf_pushed_page.dart';
+import '../../shell/presentation/widgets/trainer_page.dart';
 import '../data/clients_providers.dart';
 import '../domain/client_models.dart';
 import 'widgets/client_session_row.dart';
@@ -36,10 +36,8 @@ class ClientProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(clientProfileProvider(customerId));
 
-    return HFPushedPage(
-      backLabel: 'My Clients',
-      eyebrow: 'Client management',
-      title: 'CLIENT\nPROFILE.',
+    return TrainerPage(
+      heading: 'Client Profile',
       sub: "A quick overview of your client's details and training activity.",
       onRefresh: () async =>
           ref.refresh(clientProfileProvider(customerId).future),
@@ -81,7 +79,7 @@ class ClientProfileScreen extends ConsumerWidget {
                       Text(
                         client.name,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: HFColors.ink,
                         ),
@@ -90,7 +88,7 @@ class ClientProfileScreen extends ConsumerWidget {
                       Text(
                         'Joined ${client.joinedAt}',
                         style: const TextStyle(
-                          fontSize: 9,
+                          fontSize: 10,
                           color: HFColors.muted,
                         ),
                       ),

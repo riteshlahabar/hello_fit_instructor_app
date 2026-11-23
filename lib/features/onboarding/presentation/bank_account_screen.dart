@@ -144,7 +144,8 @@ class _State extends ConsumerState<BankAccountScreen> {
   Widget build(BuildContext context) {
     return WizardScaffold(
       stepLabel: 'PAYOUT SETUP',
-      progress: 6 / 6,
+      progress: widget.inWizard ? 6 / 6 : null,
+      shellChrome: !widget.inWizard,
       title: 'Payout\nDetails',
       sub: 'Where your earnings are transferred once a session is completed.',
       onBack: context.canPop() ? context.pop : null,

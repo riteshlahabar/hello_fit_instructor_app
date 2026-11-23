@@ -95,4 +95,23 @@ class ApiBookingsRepository implements BookingsRepository {
     },
     parse: (_) {},
   );
+
+  @override
+  Future<ApiResult<void>> complete(String sessionId, {required String otp}) =>
+      _api.post(
+        '/app/instructor/bookings/$sessionId/complete',
+        body: {'otp': otp.trim()},
+        parse: (_) {},
+      );
+
+  @override
+  Future<ApiResult<void>> cancel(
+    String sessionId, {
+    required String reason,
+    bool clientAbsent = false,
+  }) => _api.post(
+    '/app/instructor/bookings/$sessionId/cancel',
+    body: {'reason': reason, if (clientAbsent) 'clientAbsent': true},
+    parse: (_) {},
+  );
 }

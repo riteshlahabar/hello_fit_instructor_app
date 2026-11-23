@@ -8,7 +8,7 @@ import '../../../core/widgets/hf_action_pair.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_note_field.dart';
-import '../../../core/widgets/hf_pushed_page.dart';
+import '../../shell/presentation/widgets/trainer_page.dart';
 import '../data/bookings_providers.dart';
 import '../data/request_lookup.dart';
 import '../domain/booking_request.dart';
@@ -74,10 +74,8 @@ class _State extends ConsumerState<AcceptRequestScreen> {
     final request = _request;
 
     if (request == null) {
-      return const HFPushedPage(
-        backLabel: 'Booking Requests',
-        eyebrow: 'Booking request · Review',
-        title: 'ACCEPT THIS\nBOOKING?',
+      return const TrainerPage(
+        heading: 'Accept Booking',
         sub: 'Review the session details before confirming.',
         children: [
           HFEmptyPanel(
@@ -87,10 +85,8 @@ class _State extends ConsumerState<AcceptRequestScreen> {
       );
     }
 
-    return HFPushedPage(
-      backLabel: 'Booking Requests',
-      eyebrow: 'Booking request · Review',
-      title: 'ACCEPT THIS\nBOOKING?',
+    return TrainerPage(
+      heading: 'Accept Booking',
       sub:
           'Review the session details before confirming. The client will be '
           'notified once you accept.',

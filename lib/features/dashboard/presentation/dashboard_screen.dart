@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
@@ -39,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 7, 20, 16),
       onRefresh: () => ref.refresh(dashboardSummaryProvider.future),
       children: switch (summary) {
-        AsyncValue(:final value?) => _body(ref, value),
+        AsyncValue(:final value?) => _body(context, ref, value),
         AsyncError(:final error) => [
           HFEmptyPanel(message: '$error'.replaceFirst('Exception: ', '')),
         ],
@@ -48,9 +49,27 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  List<Widget> _body(WidgetRef ref, DashboardSummary data) {
+  List<Widget> _body(
+    BuildContext context,
+    WidgetRef ref,
+    DashboardSummary data,
+  ) {
     void open(TrainerTab tab) =>
         ref.read(shellControllerProvider.notifier).select(tab);
+
+    // "Review" opens page 32 for that one request (client, 23-11-2026). With
+    // no session id — an older API — it falls back to the Bookings tab rather
+    // than pushing a route it cannot fill.
+    void review(BookingRequestPreview request) {
+      if (request.sessionId.isEmpty) {
+        open(TrainerTab.bookings);
+        return;
+      }
+      context.pushNamed(
+        'booking-detail',
+        pathParameters: {'id': request.sessionId},
+      );
+    }
 
     return [
       _Greeting(greeting: data.greeting, name: data.trainerName),
@@ -73,10 +92,7 @@ class DashboardScreen extends ConsumerWidget {
         onAction: () => open(TrainerTab.bookings),
       ),
       for (final request in data.requests) ...[
-        RequestCard(
-          request: request,
-          onReview: () => open(TrainerTab.bookings),
-        ),
+        RequestCard(request: request, onReview: () => review(request)),
         const SizedBox(height: 10),
       ],
       const HFSectionHead(title: 'Quick actions'),

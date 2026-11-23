@@ -18,4 +18,16 @@ abstract interface class BookingsRepository {
     required String reason,
     String? message,
   });
+
+  /// Page 32's Completed button. [otp] is the four digits the client reads
+  /// off their own app — the proof the two of them met.
+  Future<ApiResult<void>> complete(String sessionId, {required String otp});
+
+  /// Page 32's Cancel button. [clientAbsent] is the one branch that changes
+  /// the status: a no-show rather than a trainer cancellation.
+  Future<ApiResult<void>> cancel(
+    String sessionId, {
+    required String reason,
+    bool clientAbsent = false,
+  });
 }

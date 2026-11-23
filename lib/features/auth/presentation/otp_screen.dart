@@ -7,12 +7,12 @@ import 'package:go_router/go_router.dart';
 import '../../../core/network/api_result.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_primary_button.dart';
+import '../../../core/widgets/hf_otp_boxes.dart';
 import '../../onboarding/domain/wizard_resume.dart';
 import '../../profile/data/profile_providers.dart';
 import '../data/auth_providers.dart';
 import '../domain/app_session.dart';
 import 'widgets/auth_scaffold.dart';
-import 'widgets/otp_boxes.dart';
 
 /// Page 08 — OTP Verification. `POST /auth/otp/verify`, six digits.
 class OtpScreen extends ConsumerStatefulWidget {

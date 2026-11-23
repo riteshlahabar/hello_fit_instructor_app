@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/theme/tokens.dart';
+import '../theme/tokens.dart';
 
-/// `.otp` — six single-digit boxes that advance on type and step back on
+/// `.otp` — single-digit boxes that advance on type and step back on
 /// backspace, exactly like the script in the HTML page.
 class OtpBoxes extends StatefulWidget {
   const OtpBoxes({

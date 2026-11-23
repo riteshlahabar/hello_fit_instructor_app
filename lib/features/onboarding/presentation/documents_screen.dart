@@ -78,8 +78,9 @@ class _State extends ConsumerState<DocumentsScreen> {
     final held = {for (final d in profile?.documents ?? const []) d.docType: d};
 
     return WizardScaffold(
-      stepLabel: 'STEP 5 OF 6',
-      progress: 5 / 6,
+      stepLabel: widget.inWizard ? 'STEP 5 OF 6' : 'MY ACCOUNT',
+      progress: widget.inWizard ? 5 / 6 : null,
+      shellChrome: !widget.inWizard,
       title: 'Certifications &\nDocuments',
       sub:
           'Upload the documents we need to verify you before your profile '

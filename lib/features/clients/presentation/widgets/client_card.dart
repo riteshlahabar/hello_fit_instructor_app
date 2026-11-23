@@ -43,7 +43,7 @@ class ClientCard extends StatelessWidget {
                   Text(
                     client.name,
                     style: const TextStyle(
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: HFColors.ink,
                     ),
@@ -56,7 +56,7 @@ class ClientCard extends StatelessWidget {
                               '${client.lastSessionOn}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 9, color: HFColors.muted),
+                    style: const TextStyle(fontSize: 10, color: HFColors.muted),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -64,7 +64,7 @@ class ClientCard extends StatelessWidget {
                     '${client.sessions == 1 ? 'session' : 'sessions'}'
                     ' · ${rupees(client.value)}',
                     style: const TextStyle(
-                      fontSize: 9,
+                      fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: HFColors.ink,
                     ),

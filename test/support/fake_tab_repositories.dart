@@ -61,6 +61,19 @@ class FakeBookingsRepository implements BookingsRepository {
     required String reason,
     String? message,
   }) async => const ApiSuccess(null);
+
+  @override
+  Future<ApiResult<void>> complete(
+    String sessionId, {
+    required String otp,
+  }) async => const ApiSuccess(null);
+
+  @override
+  Future<ApiResult<void>> cancel(
+    String sessionId, {
+    required String reason,
+    bool clientAbsent = false,
+  }) async => const ApiSuccess(null);
 }
 
 class FakeClientsRepository implements ClientsRepository {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_refresh.dart';
@@ -103,18 +102,16 @@ class _Heading extends StatelessWidget {
           const Text(
             'YOUR FITNESS COMMUNITY',
             style: TextStyle(
-              fontSize: 9,
+              fontSize: 10,
               letterSpacing: 1.5,
               fontWeight: FontWeight.w700,
               color: HFColors.primary,
             ),
           ),
-          const SizedBox(height: 5),
-          Text('MY CLIENTS.', style: AppTheme.display(29)),
           const SizedBox(height: 4),
           const Text(
             'Manage your client relationships and view their activity.',
-            style: TextStyle(fontSize: 11, height: 1.5, color: HFColors.muted),
+            style: TextStyle(fontSize: 12, height: 1.5, color: HFColors.muted),
           ),
         ],
       ),
@@ -135,7 +132,7 @@ class _Count extends StatelessWidget {
       child: Text(
         'Client list · $shown shown',
         style: const TextStyle(
-          fontSize: 9,
+          fontSize: 10,
           fontWeight: FontWeight.w600,
           letterSpacing: .3,
           color: HFColors.muted,

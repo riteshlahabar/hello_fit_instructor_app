@@ -37,17 +37,23 @@ class ScheduleEntry {
 }
 
 /// A booking request waiting on the trainer (spec 4.7).
+///
+/// [sessionId] is what "Review" opens — page 32 is keyed by the session, not
+/// by the assignment the trainer is answering. Empty when the API predates the
+/// field, which keeps the card tappable without a crash.
 @immutable
 class BookingRequestPreview {
   const BookingRequestPreview({
     required this.initials,
     required this.title,
     required this.subtitle,
+    this.sessionId = '',
   });
 
   final String initials;
   final String title;
   final String subtitle;
+  final String sessionId;
 }
 
 /// Everything the dashboard renders, in one immutable value.

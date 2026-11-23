@@ -8,7 +8,7 @@ import '../../../core/widgets/hf_action_pair.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_note_field.dart';
-import '../../../core/widgets/hf_pushed_page.dart';
+import '../../shell/presentation/widgets/trainer_page.dart';
 import '../data/bookings_providers.dart';
 import '../data/request_lookup.dart';
 import '../domain/booking_request.dart';
@@ -88,10 +88,8 @@ class _State extends ConsumerState<RejectRequestScreen> {
     final request = _request;
 
     if (request == null) {
-      return const HFPushedPage(
-        backLabel: 'Booking Requests',
-        eyebrow: 'Booking request · Decision',
-        title: 'DECLINE THIS\nBOOKING?',
+      return const TrainerPage(
+        heading: 'Decline Booking',
         sub: 'Choose a reason and send a clear update to the client.',
         children: [
           HFEmptyPanel(
@@ -101,10 +99,8 @@ class _State extends ConsumerState<RejectRequestScreen> {
       );
     }
 
-    return HFPushedPage(
-      backLabel: 'Booking Requests',
-      eyebrow: 'Booking request · Decision',
-      title: 'DECLINE THIS\nBOOKING?',
+    return TrainerPage(
+      heading: 'Decline Booking',
       sub:
           "If you can't take this session, choose a reason and send a clear "
           'update to the client.',

@@ -194,6 +194,7 @@ class _State extends ConsumerState<EditProfileScreen> {
     return WizardScaffold(
       stepLabel: 'MY ACCOUNT',
       progress: null,
+      shellChrome: true,
       title: 'Edit Profile',
       sub:
           'Keep your trainer profile up to date so clients can get to know '

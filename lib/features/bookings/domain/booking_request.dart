@@ -87,18 +87,35 @@ const rejectionReasons = <String>[
   'Other reason',
 ];
 
+/// Page 32's cancel list (client, 23-11-2026). The first entry is the one the
+/// backend treats differently — it books a `NO_SHOW_CUSTOMER` instead of a
+/// trainer cancellation, so the client is charged and the trainer is not at
+/// fault. See [isClientAbsent].
+const cancellationReasons = <String>[
+  'Client was not available',
+  'Client asked to cancel',
+  'I am unwell or had an emergency',
+  'Travel or weather made it impossible',
+  'Wrong address or could not reach the client',
+  'Other reason',
+];
+
+/// Which of [cancellationReasons] means the client never turned up.
+bool isClientAbsent(String reason) => reason == cancellationReasons.first;
+
 /// Page 32's extra fields on top of a [BookingRow].
 @immutable
 class BookingDetail {
   const BookingDetail({
     required this.row,
     required this.sessionCount,
-    required this.notes,
     required this.goal,
     required this.healthNotes,
     required this.requestId,
     required this.requestResponse,
     required this.requestMode,
+    required this.canComplete,
+    required this.canCancel,
   });
 
   factory BookingDetail.fromJson(Map<String, dynamic> json) {
@@ -107,24 +124,32 @@ class BookingDetail {
     return BookingDetail(
       row: BookingRow.fromJson(json),
       sessionCount: (json['sessionCount'] as num?)?.toInt() ?? 1,
-      notes: json['notes'] as String?,
       goal: json['goal'] as String?,
       healthNotes: json['healthNotes'] as String?,
       requestId: request?['id'] as String?,
       requestResponse: request?['response'] as String?,
       requestMode: request?['mode'] as String?,
+      canComplete: json['canComplete'] as bool? ?? false,
+      canCancel: json['canCancel'] as bool? ?? false,
     );
   }
 
   final BookingRow row;
   final int sessionCount;
-  final String? notes;
   final String? goal;
   final String? healthNotes;
   final String? requestId;
   final String? requestResponse;
   final String? requestMode;
 
+  /// Both come from the server, which owns the status rules — the screen
+  /// never decides for itself whether a booking can still be closed.
+  final bool canComplete;
+  final bool canCancel;
+
   /// The accept/decline bar only shows while an answer is still owed.
   bool get awaitsAnswer => requestId != null && requestResponse == 'PENDING';
+
+  /// Whether page 32 shows the close-out card at all.
+  bool get canClose => canComplete || canCancel;
 }

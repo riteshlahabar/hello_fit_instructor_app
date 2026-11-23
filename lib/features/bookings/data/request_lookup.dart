@@ -6,8 +6,7 @@ import 'bookings_providers.dart';
 /// One request out of the inbox, by id — what pages 33 and 34 are about.
 ///
 /// Reads the list rather than fetching a single request, because there is no
-/// `GET /requests/:id` and there does not need to be: both screens are
-/// reached from page 31 or 32, so the list is already in the cache.
+/// `GET /requests/:id` and there does not need to be.
 ///
 /// Null while the list is still loading, and null again the moment an answer
 /// is sent and the inbox is invalidated — which is why pages 33 and 34 keep

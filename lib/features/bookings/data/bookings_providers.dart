@@ -4,6 +4,7 @@ import '../../../core/network/api_result.dart';
 import '../../../core/state/ui_state.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../dashboard/data/dashboard_providers.dart';
+import '../../earnings/data/earnings_providers.dart';
 import '../domain/booking_models.dart';
 import '../domain/booking_request.dart';
 import '../domain/bookings_repository.dart';
@@ -52,7 +53,8 @@ final bookingDetailProvider = FutureProvider.family<BookingDetail, String>((
   };
 });
 
-/// Page 31 — the §4.7 inbox.
+/// The §4.7 request list. Page 31's inbox was deleted on 23-11-2026, so this
+/// now feeds only [requestByIdProvider] for pages 33 and 34.
 final bookingRequestsProvider = FutureProvider<List<BookingRequest>>((
   ref,
 ) async {
@@ -66,9 +68,9 @@ final bookingRequestsProvider = FutureProvider<List<BookingRequest>>((
 
 /// Owns the two writes, so no screen calls the repository itself.
 ///
-/// Every answer invalidates the three readers an answer changes: the inbox it
-/// came from, the bookings list whose buckets just moved, and the dashboard
-/// whose request count is now stale. That is the whole point of routing the
+/// Every answer invalidates the three readers an answer changes: the request
+/// list, the bookings list whose buckets just moved, and the dashboard whose
+/// request count is now stale. That is the whole point of routing the
 /// writes through here.
 class RequestController extends Notifier<void> {
   @override
@@ -104,3 +106,45 @@ class RequestController extends Notifier<void> {
 final requestControllerProvider = NotifierProvider<RequestController, void>(
   RequestController.new,
 );
+
+/// Page 32's two buttons (client, 23-11-2026). Separate from
+/// [RequestController] because these close a session rather than answer an
+/// offer, and they invalidate one reader more: the earnings tab, which the
+/// completion has just added a row to.
+class SessionCloseController extends Notifier<void> {
+  @override
+  void build() {}
+
+  Future<ApiResult<void>> complete(String sessionId, {required String otp}) =>
+      _close(sessionId, () => _repo.complete(sessionId, otp: otp));
+
+  Future<ApiResult<void>> cancel(
+    String sessionId, {
+    required String reason,
+    bool clientAbsent = false,
+  }) => _close(
+    sessionId,
+    () => _repo.cancel(sessionId, reason: reason, clientAbsent: clientAbsent),
+  );
+
+  BookingsRepository get _repo => ref.read(bookingsRepositoryProvider);
+
+  Future<ApiResult<void>> _close(
+    String sessionId,
+    Future<ApiResult<void>> Function() call,
+  ) async {
+    final result = await call();
+
+    if (result.isSuccess) {
+      ref.invalidate(bookingDetailProvider(sessionId));
+      ref.invalidate(bookingPageProvider);
+      ref.invalidate(dashboardSummaryProvider);
+      ref.invalidate(earningsSummaryProvider);
+    }
+
+    return result;
+  }
+}
+
+final sessionCloseControllerProvider =
+    NotifierProvider<SessionCloseController, void>(SessionCloseController.new);

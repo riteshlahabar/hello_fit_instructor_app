@@ -31,7 +31,7 @@ class ClientSessionRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: HFColors.ink,
                   ),
@@ -40,7 +40,7 @@ class ClientSessionRow extends StatelessWidget {
                 Text(
                   '${session.date} · ${session.time} · '
                   '${session.durationMin} minutes',
-                  style: const TextStyle(fontSize: 9, color: HFColors.muted),
+                  style: const TextStyle(fontSize: 10, color: HFColors.muted),
                 ),
               ],
             ),
@@ -53,7 +53,7 @@ class ClientSessionRow extends StatelessWidget {
               Text(
                 rupees(session.amount),
                 style: const TextStyle(
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: HFColors.ink,
                 ),
@@ -62,7 +62,7 @@ class ClientSessionRow extends StatelessWidget {
               Text(
                 session.statusLabel,
                 style: const TextStyle(
-                  fontSize: 8,
+                  fontSize: 9,
                   fontWeight: FontWeight.w700,
                   letterSpacing: .3,
                   color: HFColors.muted,

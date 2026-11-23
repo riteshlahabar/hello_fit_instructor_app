@@ -71,7 +71,7 @@ class HFField extends StatelessWidget {
         Text(
           uppercaseLabel ? pair.$1.toUpperCase() : pair.$1,
           style: TextStyle(
-            fontSize: 8,
+            fontSize: 9,
             letterSpacing: uppercaseLabel ? .6 : 0,
             fontWeight: uppercaseLabel ? FontWeight.w600 : FontWeight.w400,
             color: HFColors.muted,
@@ -81,7 +81,7 @@ class HFField extends StatelessWidget {
         Text(
           pair.$2,
           style: const TextStyle(
-            fontSize: 9,
+            fontSize: 10,
             fontWeight: FontWeight.w600,
             height: 1.4,
             color: HFColors.ink,

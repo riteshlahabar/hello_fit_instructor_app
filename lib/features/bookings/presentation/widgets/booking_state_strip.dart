@@ -36,7 +36,7 @@ class BookingStateStrip extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w700,
                     color: HFColors.statusTitle,
                   ),
@@ -45,7 +45,7 @@ class BookingStateStrip extends StatelessWidget {
                 Text(
                   sub,
                   style: const TextStyle(
-                    fontSize: 9,
+                    fontSize: 10,
                     height: 1.5,
                     color: HFColors.statusBody,
                   ),
@@ -57,7 +57,7 @@ class BookingStateStrip extends StatelessWidget {
           Text(
             detail.row.statusLabel,
             style: const TextStyle(
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
               letterSpacing: .4,
               color: HFColors.statusTag,

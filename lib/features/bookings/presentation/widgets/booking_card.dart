@@ -38,7 +38,7 @@ class BookingCard extends StatelessWidget {
                       Text(
                         row.client.name,
                         style: const TextStyle(
-                          fontSize: 11,
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: HFColors.ink,
                         ),
@@ -49,7 +49,7 @@ class BookingCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 9,
+                          fontSize: 10,
                           color: HFColors.muted,
                         ),
                       ),
@@ -109,13 +109,13 @@ class _Meta extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 9, color: HFColors.muted),
+          style: const TextStyle(fontSize: 10, color: HFColors.muted),
         ),
         const SizedBox(height: 2),
         Text(
           value,
           style: const TextStyle(
-            fontSize: 10,
+            fontSize: 11,
             fontWeight: FontWeight.w600,
             color: HFColors.ink,
           ),

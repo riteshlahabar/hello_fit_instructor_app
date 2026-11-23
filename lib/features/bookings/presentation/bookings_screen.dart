@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
 import '../../../core/widgets/hf_refresh.dart';
@@ -10,7 +9,6 @@ import '../../../core/widgets/hf_search_field.dart';
 import '../data/bookings_providers.dart';
 import '../domain/booking_models.dart';
 import 'widgets/booking_card.dart';
-import 'widgets/requests_banner.dart';
 
 /// Page 30 — All Bookings. The Bookings tab of the shell.
 ///
@@ -37,7 +35,6 @@ class BookingsScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 12),
-        const RequestsBanner(),
         HFSearchField(
           hint: 'Search client, service or code',
           onChanged: (value) =>
@@ -99,18 +96,16 @@ class _Heading extends StatelessWidget {
           Text(
             'YOUR TRAINING CALENDAR',
             style: const TextStyle(
-              fontSize: 9,
+              fontSize: 10,
               letterSpacing: 1.5,
               fontWeight: FontWeight.w700,
               color: HFColors.primary,
             ),
           ),
-          const SizedBox(height: 5),
-          Text('ALL BOOKINGS.', style: AppTheme.display(29)),
           const SizedBox(height: 4),
           const Text(
             'Manage every client booking from one place.',
-            style: TextStyle(fontSize: 11, color: HFColors.muted),
+            style: TextStyle(fontSize: 12, color: HFColors.muted),
           ),
         ],
       ),

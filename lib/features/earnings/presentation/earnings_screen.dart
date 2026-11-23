@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/hf_card.dart';
 import '../../../core/widgets/hf_list_pieces.dart';
@@ -114,8 +113,6 @@ class _Heading extends StatelessWidget {
               color: HFColors.primary,
             ),
           ),
-          const SizedBox(height: 5),
-          Text('EARNINGS.', style: AppTheme.display(29)),
           const SizedBox(height: 4),
           const Text(
             'Keep track of your income, payouts and performance.',

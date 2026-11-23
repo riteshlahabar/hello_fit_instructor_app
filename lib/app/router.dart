@@ -8,7 +8,6 @@ import '../features/auth/presentation/otp_screen.dart';
 import '../features/bookings/presentation/accept_request_screen.dart';
 import '../features/bookings/presentation/booking_detail_screen.dart';
 import '../features/bookings/presentation/reject_request_screen.dart';
-import '../features/bookings/presentation/requests_screen.dart';
 import '../features/clients/presentation/client_profile_screen.dart';
 import '../features/onboarding/presentation/bank_account_screen.dart';
 import '../features/onboarding/presentation/create_profile_screen.dart';
@@ -134,11 +133,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const DocumentsScreen(inWizard: false),
       ),
       // The four tabs live in the shell; these are the screens they push.
-      GoRoute(
-        path: '/bookings/requests',
-        name: 'booking-requests',
-        builder: (context, state) => const RequestsScreen(),
-      ),
       GoRoute(
         path: '/bookings/:id',
         name: 'booking-detail',

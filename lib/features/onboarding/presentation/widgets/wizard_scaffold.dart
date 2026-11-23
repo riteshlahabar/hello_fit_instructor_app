@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/tokens.dart';
+import '../../../../core/widgets/hf_header.dart';
 import '../../../../core/widgets/hf_refresh.dart';
+import '../../../shell/presentation/widgets/shell_nav_bar.dart';
 
 /// The frame pages 12–21 share: back button, "STEP n OF 6", a single progress
 /// bar, Anton heading and sub copy.
@@ -10,6 +12,14 @@ import '../../../../core/widgets/hf_refresh.dart';
 /// **No logo.** The client removed it from all eight registration screens on
 /// 19-11-2026, overriding their own HTML — it repeats on every step and eats
 /// the space the form needs. Splash and the intro carousel keep theirs.
+///
+/// **[shellChrome] is the exception** (client, 23-11-2026). The screens that
+/// borrow this frame from *inside* the app — Edit Profile, and the bank and
+/// document screens when they are reached from the Profile tab rather than
+/// from the wizard — carry the header bar with the heading in it and the tab
+/// bar at the foot, like every other in-app screen. The wizard steps
+/// themselves do not: a half-onboarded applicant cannot reach the shell those
+/// tabs lead to.
 class WizardScaffold extends StatelessWidget {
   const WizardScaffold({
     super.key,
@@ -21,6 +31,7 @@ class WizardScaffold extends StatelessWidget {
     this.onBack,
     this.trailing,
     this.onRefresh,
+    this.shellChrome = false,
   });
 
   /// e.g. `STEP 1 OF 6`, or `PROFILE SETUP` on the pages outside the count.
@@ -43,20 +54,28 @@ class WizardScaffold extends StatelessWidget {
   /// re-fetch would either show nothing new or throw away typing.
   final Future<void> Function()? onRefresh;
 
+  /// True on the in-app screens: header bar with the heading, tab bar at the
+  /// foot, and no second copy of the heading in the body.
+  final bool shellChrome;
+
   @override
   Widget build(BuildContext context) {
     final body = SingleChildScrollView(
       physics: HFRefresh.physics,
-      padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+      padding: EdgeInsets.fromLTRB(22, shellChrome ? 4 : 14, 22, 28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 42,
+            height: shellChrome ? 20 : 42,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (onBack != null)
+                // The back control moves into the header bar under
+                // [shellChrome], so the row keeps only the step label.
+                if (shellChrome)
+                  const SizedBox.shrink()
+                else if (onBack != null)
                   InkWell(
                     onTap: onBack,
                     borderRadius: BorderRadius.circular(12),
@@ -101,9 +120,11 @@ class WizardScaffold extends StatelessWidget {
               ),
             )
           else
-            const SizedBox(height: 17),
-          Text(title, style: AppTheme.display(34)),
-          const SizedBox(height: 9),
+            SizedBox(height: shellChrome ? 4 : 17),
+          if (!shellChrome) ...[
+            Text(title, style: AppTheme.display(34)),
+            const SizedBox(height: 9),
+          ],
           Text(
             sub,
             style: const TextStyle(
@@ -118,15 +139,31 @@ class WizardScaffold extends StatelessWidget {
       ),
     );
 
+    final scroller = onRefresh == null
+        ? body
+        : HFRefresh(onRefresh: onRefresh!, child: body);
+
     return Scaffold(
       backgroundColor: HFColors.ivory,
       body: SafeArea(
-        child: onRefresh == null
-            ? body
-            : HFRefresh(onRefresh: onRefresh!, child: body),
+        bottom: !shellChrome,
+        child: shellChrome
+            ? Column(
+                children: [
+                  HFHeader(title: _heading, onBack: onBack),
+                  Expanded(child: scroller),
+                ],
+              )
+            : scroller,
       ),
+      bottomNavigationBar: shellChrome
+          ? const ShellNavBar(popToShell: true)
+          : null,
     );
   }
+
+  /// The Anton heading breaks its line with `\n`; a header bar is one line.
+  String get _heading => title.replaceAll('\n', ' ');
 }
 
 /// `.section-label` — the small orange caps rule above a group of fields.
