@@ -24,6 +24,30 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
 
+  # Build-time only; never imported. Re-run after changing the artwork:
+  #   dart run flutter_launcher_icons
+  flutter_launcher_icons: ^0.14.4
+
+# Launcher icon, generated from the client's supplied logo (24-11-2026).
+#
+# `assets/images/logo.png` is byte-for-byte the same badge the customer app
+# uses: 2048x2048, transparent corners, ground **#E53D29** — the artwork's own
+# value, not the #E33E29 brand token, because two near shades meet as a visible
+# seam ring under Android's adaptive mask. iOS forbids alpha, so the corners
+# are filled with that orange instead of the tool's default white.
+#
+# **Both apps therefore carry the same icon.** The launcher tells them apart by
+# label only, and the label is still `instructor_app` — the open question of
+# 24-11-2026. → `state/resume/standing.md`
+flutter_launcher_icons:
+  image_path: "assets/images/logo.png"
+  android: true
+  adaptive_icon_background: "#E53D29"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#E53D29"
+
 flutter:
   uses-material-design: true
 
